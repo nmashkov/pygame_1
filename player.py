@@ -1,6 +1,7 @@
 import pygame
 
-import settings, variables
+import settings
+import variables
 from logger import setup_logger
 
 
@@ -56,17 +57,19 @@ class Player:
             # move left
             # LP
             if key[self.left_button_1] and self.square.left > 5:
-                self.square.left -= self.square_speed * delta_t * 60            
+                self.square.left -= self.square_speed * delta_t
             # RP
             if key[self.left_button_2] and self.square.left > 5:
-                self.square.left -= self.square_speed * delta_t * 60
+                self.square.left -= self.square_speed * delta_t
             # move right
             # LP
-            if key[self.right_button_1] and self.square.right < self.app.res[0]-5:
-                self.square.right += self.square_speed * delta_t * 60
+            if (key[self.right_button_1] and
+                    self.square.right < self.app.res[0]-5):
+                self.square.right += self.square_speed * delta_t
             # RP
-            if key[self.right_button_2] and self.square.right < self.app.res[0]-5:
-                self.square.right += self.square_speed * delta_t * 60
+            if (key[self.right_button_2] and
+                    self.square.right < self.app.res[0]-5):
+                self.square.right += self.square_speed * delta_t
             # accelerate death wall
             if key[self.acc_button_1] or key[self.acc_button_2]:
                 self.app.dwall.dwall_speed = settings.dwall_speed * 2

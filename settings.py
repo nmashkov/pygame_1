@@ -26,7 +26,7 @@ EXIT = pygame.K_ESCAPE
 dblock_w = 70
 dblock_h = 70
 dblock_color = (255, 107, 107)
-dwall_speed = 6 / 2
+dwall_speed = 6
 
 # initial player and stats settings
 health = 3

@@ -1,5 +1,4 @@
 import pygame
-import time
 
 import settings
 import variables
@@ -8,7 +7,7 @@ from dwall import Dwall
 from debug import debug
 from event_manager import (
     event_handler,
-    START_MENU, START_TRAIN, START_EXAM, STOP_STAGE)
+    START_MENU, START_TRAIN)
 # debug(info, pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
 
 
@@ -26,17 +25,17 @@ class App:
         self.quit_event = pygame.event.Event(pygame.QUIT)
         self.player = Player(self)
         self.dwall = Dwall(self)
-    
+
     def app_caption(self, mode='menu'):
         current_fps = self.clock.get_fps()
         if mode == 'game':
             pygame.display.set_caption(f'{self.app_name}. '
-                                        f'Health: {self.player.health}. '
-                                        f'Score: {self.player.score}. '
-                                        f'FPS: {current_fps:.2f}')
+                                       f'Health: {self.player.health}. '
+                                       f'Score: {self.player.score}. '
+                                       f'FPS: {current_fps:.2f}')
         if mode == 'menu':
             pygame.display.set_caption(f'{self.app_name}. '
-                                        f'FPS: {current_fps:.2f}')
+                                       f'FPS: {current_fps:.2f}')
 
     def update(self, delta_t):
         self.player.update(delta_t)
@@ -54,15 +53,9 @@ class App:
         pygame.event.post(pygame.event.Event(START_MENU))
         variables.SESSION_STAGE = 'START_MENU'
 
-        prev_time = time.time()
-
         in_menu = True
         while in_menu:
-            self.clock.tick(15)
-
-            now = time.time()
-            delta_t = now - prev_time
-            prev_time = now
+            delta_t = self.clock.tick(15) / 1000 * 60
 
             event_handler()
 
@@ -77,10 +70,10 @@ class App:
                 in_menu = False
 
             self.screen.blit(
-            self.font.render("GAME START MENU",
-                        True,
-                        'black'),
-            (100, 100),
+                self.font.render("GAME START MENU",
+                                 True,
+                                 'black'),
+                (100, 100),
             )
 
             pygame.display.update()
@@ -91,14 +84,8 @@ class App:
 
         self.start_menu()
 
-        prev_time = time.time()
-
         while True:
-            self.clock.tick(self.fps)
-
-            now = time.time()
-            delta_t = now - prev_time
-            prev_time = now
+            delta_t = self.clock.tick(self.fps) / 1000 * 60
 
             event_handler()
 

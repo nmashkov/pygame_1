@@ -2,7 +2,9 @@ import pygame
 from random import randrange as rnd
 from datetime import datetime as dt
 
-import settings, variables, event_manager
+import settings
+import variables
+import event_manager
 from logger import setup_logger
 
 
@@ -33,8 +35,8 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
 
     # LOGS
     print(dwall_list)
-    dwall_log.info({'time':str(dt.now()),
-                    'message':'create_new_dwall'})
+    dwall_log.info({'time': str(dt.now()),
+                    'message': 'create_new_dwall'})
 
     new_dwall = [pygame.Rect(70 * j - 70,
                              -70,
@@ -80,7 +82,7 @@ class Dwall:
 
         # death wall moving and checks
         for dblock in self.dwall:
-            dblock.y += self.dwall_speed * delta_t * 60
+            dblock.y += self.dwall_speed * delta_t
 
             collision_with_line = line.collidelistall(self.dwall)
             if len(collision_with_line) > 0:
@@ -112,13 +114,13 @@ class Dwall:
                     )
                     self.dwall = []
                     self.player.square.left = (self.app.res[0] // 2
-                                            - self.player.square_w // 2)
+                                               - self.player.square_w // 2)
                     break
                 else:
                     self.player.health -= 1
                     self.dwall = []
                     # LOGS
-                    print(f'Game over')
+                    print('Game over')
                     dwall_log.info(
                         {
                             'time': str(dt.now()),
@@ -131,4 +133,3 @@ class Dwall:
                     pygame.event.post(
                         pygame.event.Event(event_manager.STOP_STAGE))
                     pygame.event.post(self.app.quit_event)
-                

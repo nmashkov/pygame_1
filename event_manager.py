@@ -3,7 +3,8 @@ from datetime import datetime as dt
 
 from logger import setup_logger
 from player import player_log
-import settings, variables
+import settings
+import variables
 
 
 log_file = './logs/events.json'
@@ -65,12 +66,14 @@ def player_events(events):
                     # stop coop due to conflict
                     if variables.coop_started:
                         variables.coop_started = False
-                        variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                        variables.cooperative_time += (
+                            dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
                                 'time': str(dt.now()),
                                 'message': 'COOP_END',
-                                'cooperation_time': str(variables.cooperative_time.seconds)
+                                'cooperation_time': str(
+                                    variables.cooperative_time.seconds)
                             }
                         )
                     # start conflict on click
@@ -106,12 +109,14 @@ def player_events(events):
                     # stop coop due to conflict
                     if variables.coop_started:
                         variables.coop_started = False
-                        variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                        variables.cooperative_time += (
+                            dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
                                 'time': str(dt.now()),
                                 'message': 'COOP_END',
-                                'cooperation_time': str(variables.cooperative_time.seconds)
+                                'cooperation_time': str(
+                                    variables.cooperative_time.seconds)
                             }
                         )
                     # start conflict on click
@@ -167,12 +172,14 @@ def player_events(events):
                     # stop coop due to conflict
                     if variables.coop_started:
                         variables.coop_started = False
-                        variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                        variables.cooperative_time += (
+                            dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
                                 'time': str(dt.now()),
                                 'message': 'COOP_END',
-                                'cooperation_time': str(variables.cooperative_time.seconds)
+                                'cooperation_time': str(
+                                    variables.cooperative_time.seconds)
                             }
                         )
                     # start conflict on click
@@ -208,12 +215,14 @@ def player_events(events):
                     # stop coop due to conflict
                     if variables.coop_started:
                         variables.coop_started = False
-                        variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                        variables.cooperative_time += (
+                            dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
                                 'time': str(dt.now()),
                                 'message': 'COOP_END',
-                                'cooperation_time': str(variables.cooperative_time.seconds)
+                                'cooperation_time': str(
+                                    variables.cooperative_time.seconds)
                             }
                         )
                     # start conflict on click
@@ -260,23 +269,27 @@ def player_events(events):
             if variables.coop_started:
                 if not variables.cooperation:
                     variables.coop_started = False
-                    variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                    variables.cooperative_time += (
+                        dt.now() - variables.start_cooperative_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'COOP_END',
-                            'cooperation_time': str(variables.cooperative_time.seconds)
+                            'cooperation_time': str(
+                                variables.cooperative_time.seconds)
                         }
                     )
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
-                    variables.conflict_time += dt.now() - variables.start_conflict_time
+                    variables.conflict_time += (
+                        dt.now() - variables.start_conflict_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'CONFLICT_END',
-                            'conflict_time': str(variables.conflict_time.seconds)
+                            'conflict_time': str(
+                                variables.conflict_time.seconds)
                         }
                     )
         if events.key == settings.RIGHT_1:
@@ -292,23 +305,27 @@ def player_events(events):
             if variables.coop_started:
                 if not variables.cooperation:
                     variables.coop_started = False
-                    variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                    variables.cooperative_time += (
+                        dt.now() - variables.start_cooperative_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'COOP_END',
-                            'cooperation_time': str(variables.cooperative_time.seconds)
+                            'cooperation_time': str(
+                                variables.cooperative_time.seconds)
                         }
                     )
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
-                    variables.conflict_time += dt.now() - variables.start_conflict_time
+                    variables.conflict_time += (
+                        dt.now() - variables.start_conflict_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'CONFLICT_END',
-                            'conflict_time': str(variables.conflict_time.seconds)
+                            'conflict_time': str(
+                                variables.conflict_time.seconds)
                         }
                     )
         if events.key == settings.ACCELERATE_1:
@@ -324,12 +341,14 @@ def player_events(events):
             if variables.accelerate_started:
                 if not variables.accelerate:
                     variables.accelerate_started = False
-                    variables.accelerate_time += dt.now() - variables.start_accelerate_time
+                    variables.accelerate_time += (
+                        dt.now() - variables.start_accelerate_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'ACC_END',
-                            'accelerate_time': str(variables.accelerate_time.seconds)
+                            'accelerate_time': str(
+                                variables.accelerate_time.seconds)
                         }
                     )
         # RP
@@ -346,23 +365,27 @@ def player_events(events):
             if variables.coop_started:
                 if not variables.cooperation:
                     variables.coop_started = False
-                    variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                    variables.cooperative_time += (
+                        dt.now() - variables.start_cooperative_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'COOP_END',
-                            'cooperation_time': str(variables.cooperative_time.seconds)
+                            'cooperation_time': str(
+                                variables.cooperative_time.seconds)
                         }
                     )
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
-                    variables.conflict_time += dt.now() - variables.start_conflict_time
+                    variables.conflict_time += (
+                        dt.now() - variables.start_conflict_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'CONFLICT_END',
-                            'conflict_time': str(variables.conflict_time.seconds)
+                            'conflict_time': str(
+                                variables.conflict_time.seconds)
                         }
                     )
         if events.key == settings.RIGHT_2:
@@ -378,23 +401,27 @@ def player_events(events):
             if variables.coop_started:
                 if not variables.cooperation:
                     variables.coop_started = False
-                    variables.cooperative_time += dt.now() - variables.start_cooperative_time
+                    variables.cooperative_time += (
+                        dt.now() - variables.start_cooperative_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'COOP_END',
-                            'cooperation_time': str(variables.cooperative_time.seconds)
+                            'cooperation_time': str(
+                                variables.cooperative_time.seconds)
                         }
                     )
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
-                    variables.conflict_time += dt.now() - variables.start_conflict_time
+                    variables.conflict_time += (
+                        dt.now() - variables.start_conflict_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'CONFLICT_END',
-                            'conflict_time': str(variables.conflict_time.seconds)
+                            'conflict_time': str(
+                                variables.conflict_time.seconds)
                         }
                     )
         if events.key == settings.ACCELERATE_2:
@@ -410,12 +437,14 @@ def player_events(events):
             if variables.accelerate_started:
                 if not variables.accelerate:
                     variables.accelerate_started = False
-                    variables.accelerate_time += dt.now() - variables.start_accelerate_time
+                    variables.accelerate_time += (
+                        dt.now() - variables.start_accelerate_time)
                     player_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'ACC_END',
-                            'accelerate_time': str(variables.accelerate_time.seconds)
+                            'accelerate_time': str(
+                                variables.accelerate_time.seconds)
                         }
                     )
 
