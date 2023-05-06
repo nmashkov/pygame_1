@@ -8,7 +8,7 @@ import event_manager
 from logger import setup_logger
 
 
-log_file = './logs/dwall.json'
+log_file = 'dwall.json'
 dwall_log = setup_logger('dwall_logger', log_file)
 
 

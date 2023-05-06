@@ -1,3 +1,6 @@
+import uuid
+import pathlib
+
 import pygame
 
 
@@ -6,6 +9,11 @@ NAME = 'Game 1'
 WIDTH, HEIGHT = 700, 900
 FPS = 60
 bg_color = (190, 190, 190)
+
+# log folder settings
+BASE_DIR = str(pathlib.Path().resolve())
+BASE_LOGS_DIR = 'logs'
+SESSION_DIR = str(uuid.uuid1())
 
 # player square settings
 square_color = (136, 39, 255)

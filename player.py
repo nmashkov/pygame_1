@@ -5,7 +5,7 @@ import variables
 from logger import setup_logger
 
 
-log_file = './logs/player.json'
+log_file = 'player.json'
 player_log = setup_logger('player_logger', log_file)
 
 

@@ -1,3 +1,4 @@
+import sys
 import pygame
 from datetime import datetime as dt
 
@@ -7,7 +8,7 @@ import settings
 import variables
 
 
-log_file = './logs/events.json'
+log_file = 'events.json'
 event_log = setup_logger('event_logger', log_file)
 
 
@@ -450,15 +451,13 @@ def player_events(events):
 
 
 def event_handler():
-    # [exit() for i in pygame.event.get() if i.type == pygame.QUIT]
-
     for events in pygame.event.get():
         # EVENTS SECTION
         # START MENU
         if events.type == START_MENU:
             event_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'START_MENU'
                 }
             )
@@ -466,13 +465,13 @@ def event_handler():
         if events.type == START_TRAIN:
             event_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'START_TRAIN'
                 }
             )
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'START_TRAIN'
                 }
             )
@@ -480,13 +479,13 @@ def event_handler():
         if events.type == START_EXAM:
             event_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'START_EXAM'
                 }
             )
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'START_EXAM'
                 }
             )
@@ -495,7 +494,7 @@ def event_handler():
             variables.stage_time = dt.now() - variables.start_stage_time
             event_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'STOP_STAGE',
                     'stage_time': f'{variables.stage_time}'
                 }
@@ -517,7 +516,7 @@ def event_handler():
                 active_kpush_p = 'RIGHT_P'
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'STOP_STAGE',
                     'stage_time': f'{variables.stage_time}',
                     'active_p': active_p,
@@ -535,15 +534,14 @@ def event_handler():
             )
         # QUIT APP
         if events.type == pygame.QUIT:
-            # pygame.quit()
-            # quit()
             event_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'SESSION_END'
                 }
             )
-            exit()
+            pygame.quit()
+            sys.exit()
 
         if variables.SESSION_STAGE not in ('START_MENU', 'STOP_STAGE'):
             player_events(events)
