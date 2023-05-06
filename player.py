@@ -1,9 +1,14 @@
 import pygame
 
-import settings
+import settings, variables
+from logger import setup_logger
 
 
-def pause(app, pause_button):
+log_file = './logs/player.json'
+player_log = setup_logger('player_logger', log_file)
+
+
+def pause(app):
     paused = True
     while paused:
         [exit() for i in pygame.event.get() if i.type == pygame.QUIT]
@@ -44,31 +49,32 @@ class Player:
         # drawing player square
         pygame.draw.rect(self.app.screen, self.square_color, self.square)
 
-    def update(self):
+    def update(self, delta_t=1/60):
         # player controls
         key = pygame.key.get_pressed()
-        # move left
-        # LP
-        if key[self.left_button_1] and self.square.left > 5:
-            self.square.left -= self.square_speed
-        # RP
-        if key[self.left_button_2] and self.square.left > 5:
-            self.square.left -= self.square_speed
-        # move right
-        # LP
-        if key[self.right_button_1] and self.square.right < self.app.res[0]-5:
-            self.square.right += self.square_speed
-        # RP
-        if key[self.right_button_2] and self.square.right < self.app.res[0]-5:
-            self.square.right += self.square_speed
-        # accelerate death wall
-        if key[self.acc_button_1] or key[self.acc_button_2]:
-            self.app.dwall.dwall_speed = 12
-        else:
-            self.app.dwall.dwall_speed = 6
+        if variables.SESSION_STAGE not in ('START_MENU', 'STOP_STAGE'):
+            # move left
+            # LP
+            if key[self.left_button_1] and self.square.left > 5:
+                self.square.left -= self.square_speed * delta_t * 60            
+            # RP
+            if key[self.left_button_2] and self.square.left > 5:
+                self.square.left -= self.square_speed * delta_t * 60
+            # move right
+            # LP
+            if key[self.right_button_1] and self.square.right < self.app.res[0]-5:
+                self.square.right += self.square_speed * delta_t * 60
+            # RP
+            if key[self.right_button_2] and self.square.right < self.app.res[0]-5:
+                self.square.right += self.square_speed * delta_t * 60
+            # accelerate death wall
+            if key[self.acc_button_1] or key[self.acc_button_2]:
+                self.app.dwall.dwall_speed = settings.dwall_speed * 2
+            else:
+                self.app.dwall.dwall_speed = settings.dwall_speed
+            # pause game
+            if key[pygame.K_p]:
+                pause(self.app)
         # exit app
         if key[self.exit_button]:
             pygame.event.post(self.app.quit_event)
-        # pause game
-        if key[pygame.K_p]:
-            pause(self.app)

@@ -1,7 +1,13 @@
 import pygame
 from random import randrange as rnd
+from datetime import datetime as dt
 
-import settings
+import settings, variables, event_manager
+from logger import setup_logger
+
+
+log_file = './logs/dwall.json'
+dwall_log = setup_logger('dwall_logger', log_file)
 
 
 def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
@@ -25,7 +31,11 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
         if counter < difficulty:
             done = True
 
+    # LOGS
     print(dwall_list)
+    dwall_log.info({'time':str(dt.now()),
+                    'message':'create_new_dwall'})
+
     new_dwall = [pygame.Rect(70 * j - 70,
                              -70,
                              dblock_w,
@@ -52,7 +62,7 @@ class Dwall:
         [pygame.draw.rect(self.app.screen, self.dblock_color, dblock)
          for dblock in self.dwall]
 
-    def update(self):
+    def update(self, delta_t):
         # creating death wall
         if len(self.dwall) == 0:
             self.dwall, self.dwall_list_previous = dwall_new(
@@ -70,21 +80,55 @@ class Dwall:
 
         # death wall moving and checks
         for dblock in self.dwall:
-            dblock.y += self.dwall_speed
+            dblock.y += self.dwall_speed * delta_t * 60
 
             collision_with_line = line.collidelistall(self.dwall)
             if len(collision_with_line) > 0:
                 self.dwall = []
                 self.player.score += 1
+                # LOGS
+                print(f'points: {self.player.score}')
+                dwall_log.info(
+                    {
+                        'time': str(dt.now()),
+                        'message': 'update_score',
+                        'score': self.player.score
+                    }
+                )
                 break
 
             collisions = self.player.square.collidelistall(self.dwall)
             if len(collisions) > 0:
-                print('Death')
-                self.player.health -= 1
-                if not self.player.health:
+                if self.player.health > 1:
+                    self.player.health -= 1
+                    # LOGS
+                    print(f'Death. Remains {self.player.health} attempts')
+                    dwall_log.info(
+                        {
+                            'time': str(dt.now()),
+                            'message': 'death',
+                            'health': self.player.health
+                        }
+                    )
+                    self.dwall = []
+                    self.player.square.left = (self.app.res[0] // 2
+                                            - self.player.square_w // 2)
+                    break
+                else:
+                    self.player.health -= 1
+                    self.dwall = []
+                    # LOGS
+                    print(f'Game over')
+                    dwall_log.info(
+                        {
+                            'time': str(dt.now()),
+                            'message': 'game_over',
+                            'health': self.player.health
+                        }
+                    )
+                    #
+                    variables.SESSION_STAGE = 'STOP_STAGE'
+                    pygame.event.post(
+                        pygame.event.Event(event_manager.STOP_STAGE))
                     pygame.event.post(self.app.quit_event)
-                self.dwall = []
-                self.player.square.left = (self.app.res[0] // 2
-                                           - self.player.square_w // 2)
-                break
+                

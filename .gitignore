@@ -1,5 +1,6 @@
 *.bak
 /media
+/logs
 docs.txt
 
 # Byte-compiled / optimized / DLL files
