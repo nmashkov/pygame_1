@@ -2,10 +2,10 @@ import sys
 import pygame
 from datetime import datetime as dt
 
-from logger import setup_logger
-from player import player_log
 import settings
 import variables
+from logger import setup_logger
+from player import player_log, player_pos_log
 
 
 log_file = 'events.json'
@@ -16,6 +16,8 @@ START_MENU = pygame.USEREVENT + 1
 START_TRAIN = pygame.USEREVENT + 2
 START_EXAM = pygame.USEREVENT + 3
 STOP_STAGE = pygame.USEREVENT + 4
+RESULT = pygame.USEREVENT + 5
+PLAYER_POS = pygame.USEREVENT + 6
 
 
 def player_events(events):
@@ -458,11 +460,15 @@ def event_handler():
             event_log.info(
                 {
                     'time': f'{dt.now()}',
-                    'message': 'START_MENU'
+                    'message': 'START_MENU',
+                    'SESSION': f'{settings.SESSION_DIR}'
                 }
             )
         # START TRAIN SESSION
         if events.type == START_TRAIN:
+            variables.pl_pos_log = True
+            pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
+            variables.start_stage_time = dt.now()
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -470,6 +476,12 @@ def event_handler():
                 }
             )
             player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_TRAIN'
+                }
+            )
+            player_pos_log.info(
                 {
                     'time': f'{dt.now()}',
                     'message': 'START_TRAIN'
@@ -477,6 +489,12 @@ def event_handler():
             )
         # START EXAM SESSION
         if events.type == START_EXAM:
+            variables.pl_pos_log = True
+            pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
+            settings.dwall_speed = 6
+            settings.difficulty = 4
+            variables.score = 0
+            variables.start_stage_time = dt.now()
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -484,6 +502,12 @@ def event_handler():
                 }
             )
             player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_EXAM'
+                }
+            )
+            player_pos_log.info(
                 {
                     'time': f'{dt.now()}',
                     'message': 'START_EXAM'
@@ -491,7 +515,9 @@ def event_handler():
             )
         # STOP STAGE
         if events.type == STOP_STAGE:
-            variables.stage_time = dt.now() - variables.start_stage_time
+            pygame.time.set_timer(PLAYER_POS, 0)
+            variables.pl_pos_log = False
+            variables.stage_time += dt.now() - variables.start_stage_time
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -499,49 +525,75 @@ def event_handler():
                     'stage_time': f'{variables.stage_time}'
                 }
             )
-            active_p = 'LEFT_P'
-            if variables.lp_active_time >= variables.rp_active_time:
-                active_p = 'LEFT_P'
-            else:
-                active_p = 'RIGHT_P'
-            active_acc_p = ''
-            if variables.lp_active_acc_time >= variables.rp_active_acc_time:
-                active_acc_p = 'LEFT_P'
-            else:
-                active_acc_p = 'RIGHT_P'
-            active_kpush_p = ''
-            if variables.lp_key_pushes >= variables.rp_key_pushes:
-                active_kpush_p = 'LEFT_P'
-            else:
-                active_kpush_p = 'RIGHT_P'
             player_log.info(
                 {
                     'time': f'{dt.now()}',
                     'message': 'STOP_STAGE',
+                    'stage_time': f'{variables.stage_time}'
+                }
+            )
+            player_pos_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'STOP_STAGE',
+                    'stage_time': f'{variables.stage_time}'
+                }
+            )
+        # RESULT
+        if events.type == RESULT:
+            event_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'RESULT'
+                }
+            )
+            if variables.lp_active_time >= variables.rp_active_time:
+                variables.active_p = 'LEFT_P'
+            else:
+                variables.active_p = 'RIGHT_P'
+            if variables.lp_active_acc_time >= variables.rp_active_acc_time:
+                variables.active_acc_p = 'LEFT_P'
+            else:
+                variables.active_acc_p = 'RIGHT_P'
+            if variables.lp_key_pushes >= variables.rp_key_pushes:
+                variables.active_kpush_p = 'LEFT_P'
+            else:
+                variables.active_kpush_p = 'RIGHT_P'
+            player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'RESULT',
+                    'score': variables.score,
                     'stage_time': f'{variables.stage_time}',
-                    'active_p': active_p,
+                    'active_p': variables.active_p,
                     'lp_act_t': f'{variables.lp_active_time}',
                     'rp_act_t': f'{variables.rp_active_time}',
-                    'active_acc_p': active_acc_p,
+                    'active_acc_p': variables.active_acc_p,
                     'lp_acc_t': f'{variables.lp_active_acc_time}',
                     'rp_acc_t': f'{variables.rp_active_acc_time}',
-                    'active_kpush_p': active_kpush_p,
+                    'active_kpush_p': variables.active_kpush_p,
                     'lp_kpush': variables.lp_key_pushes,
                     'rp_kpush': variables.rp_key_pushes,
                     'coop_time': f'{variables.cooperative_time}',
                     'conflict_time': f'{variables.conflict_time}'
                 }
             )
+        # RESULT
+        if events.type == PLAYER_POS:
+            variables.pl_pos_log = True
         # QUIT APP
         if events.type == pygame.QUIT:
             event_log.info(
                 {
                     'time': f'{dt.now()}',
-                    'message': 'SESSION_END'
+                    'message': 'SESSION_END',
+                    'SESSION': f'{settings.SESSION_DIR}'
                 }
             )
             pygame.quit()
             sys.exit()
 
-        if variables.SESSION_STAGE not in ('START_MENU', 'STOP_STAGE'):
+        if variables.SESSION_STAGE not in ('START_MENU',
+                                           'STOP_STAGE',
+                                           'RESULT'):
             player_events(events)

@@ -1,4 +1,5 @@
 import pygame
+from datetime import datetime as dt
 
 import settings
 import variables
@@ -7,6 +8,9 @@ from logger import setup_logger
 
 log_file = 'player.json'
 player_log = setup_logger('player_logger', log_file)
+
+log_file = 'player_pos.json'
+player_pos_log = setup_logger('player_pos_logger', log_file)
 
 
 def pause(app):
@@ -50,10 +54,22 @@ class Player:
         # drawing player square
         pygame.draw.rect(self.app.screen, self.square_color, self.square)
 
+    def log_player_pos(self):
+        if variables.pl_pos_log:
+            player_pos_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'player_pos': self.square.x
+                }
+            )
+            variables.pl_pos_log = False
+
     def update(self, delta_t=1/60):
         # player controls
         key = pygame.key.get_pressed()
-        if variables.SESSION_STAGE not in ('START_MENU', 'STOP_STAGE'):
+        if variables.SESSION_STAGE not in ('START_MENU',
+                                           'STOP_STAGE',
+                                           'RESULT'):
             # move left
             # LP
             if key[self.left_button_1] and self.square.left > 5:
@@ -78,6 +94,7 @@ class Player:
             # pause game
             if key[pygame.K_p]:
                 pause(self.app)
+
         # exit app
         if key[self.exit_button]:
             pygame.event.post(self.app.quit_event)

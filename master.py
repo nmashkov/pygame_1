@@ -7,7 +7,7 @@ from dwall import Dwall
 from debug import debug
 from event_manager import (
     event_handler,
-    START_MENU, START_TRAIN)
+    START_MENU, START_TRAIN, RESULT)
 # debug(info, pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
 
 
@@ -47,6 +47,9 @@ class App:
     def draw(self):
         self.player.draw()
         self.dwall.draw()
+        self.screen.blit(
+            self.font.render(variables.SESSION_STAGE, True, 'black'),
+            (settings.WIDTH // 2, 10))
         pygame.display.update()
 
     def start_menu(self):
@@ -70,15 +73,75 @@ class App:
                 in_menu = False
 
             self.screen.blit(
-                self.font.render("GAME START MENU",
-                                 True,
-                                 'black'),
-                (100, 100),
-            )
+                self.font.render(variables.SESSION_STAGE, True, 'black'),
+                (settings.WIDTH // 2, 10))
 
             pygame.display.update()
 
             self.app_caption('menu')
+
+    def train(self, delta_t):
+
+        self.screen.fill(self.bg_color)
+
+        self.update(delta_t)
+        self.draw()
+
+        self.app_caption('game')
+
+    def exam(self, delta_t):
+
+        self.screen.fill(self.bg_color)
+
+        self.update(delta_t)
+        self.draw()
+
+        self.app_caption('game')
+
+    def result(self):
+        pygame.event.post(pygame.event.Event(RESULT))
+
+        in_result = True
+        while in_result:
+            delta_t = self.clock.tick(15) / 1000 * 60
+
+            event_handler()
+
+            self.screen.fill(self.bg_color)
+
+            self.player.update(delta_t)
+
+            key = pygame.key.get_pressed()
+            if key[pygame.K_RETURN]:
+                in_result = False
+
+            self.screen.blit(
+                self.font.render("RESULTS",
+                                 True,
+                                 'black'),
+                (settings.WIDTH // 2, 10),
+            )
+
+            debug(variables.stage_time)
+            debug(variables.active_p, 30)
+            debug(variables.lp_active_time, 50)
+            debug(variables.rp_active_time, 70)
+            debug(variables.active_acc_p, 90)
+            debug(variables.lp_active_acc_time, 110)
+            debug(variables.rp_active_acc_time, 130)
+            debug(variables.active_kpush_p, 150)
+            debug(variables.lp_key_pushes, 170)
+            debug(variables.rp_key_pushes, 190)
+            debug(variables.cooperative_time, 210)
+            debug(variables.conflict_time, 230)
+            debug(self.player.score, 250)
+
+            pygame.display.update()
+
+            self.app_caption()
+
+        pygame.event.post(self.quit_event)
+        event_handler()
 
     def run(self):
 
@@ -89,12 +152,18 @@ class App:
 
             event_handler()
 
-            self.screen.fill(self.bg_color)
+            if variables.SESSION_STAGE == 'START_TRAIN':
+                self.train(delta_t)
+                self.player.log_player_pos()
 
-            self.update(delta_t)
-            self.draw()
+            if variables.SESSION_STAGE == 'START_EXAM':
+                self.exam(delta_t)
+                self.player.log_player_pos()
 
-            self.app_caption('game')
+            if variables.SESSION_STAGE == 'RESULT':
+                break
+
+        self.result()
 
 
 if __name__ == '__main__':

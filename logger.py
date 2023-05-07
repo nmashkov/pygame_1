@@ -41,7 +41,6 @@ def setup_logger(name: str, log_file: str, level=logging.INFO):
 
     formatter = JSONFormatter()
     file_handler = logging.FileHandler(dir)
-    # file_handler = logging.FileHandler(log_file)
     file_handler.setFormatter(formatter)
 
     logger = logging.getLogger(name)

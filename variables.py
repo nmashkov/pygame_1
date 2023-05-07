@@ -2,7 +2,9 @@ import datetime as dt
 
 
 SESSION_STAGE = ''
-# START_MENU, START_TRAIN, START_EXAM, STOP_STAGE
+# START_MENU, START_TRAIN, START_EXAM, STOP_STAGE, RESULT
+
+score = 0
 
 start_stage_time = dt.datetime.now()
 stage_time = dt.timedelta()
@@ -35,3 +37,9 @@ cooperation = False
 coop_started = False
 cooperative_time = dt.timedelta()
 start_cooperative_time = dt.datetime.now()
+
+active_p = ''
+active_acc_p = ''
+active_kpush_p = ''
+
+pl_pos_log = False

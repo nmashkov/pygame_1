@@ -20,6 +20,7 @@ square_color = (136, 39, 255)
 square_w = 50
 square_h = 50
 square_speed = 3
+PLPOSLOG_TIMER = 100
 
 # player controls
 LEFT_1 = pygame.K_a
@@ -34,9 +35,13 @@ EXIT = pygame.K_ESCAPE
 dblock_w = 70
 dblock_h = 70
 dblock_color = (255, 107, 107)
-dwall_speed = 6
+dwall_speed = 4
 
-# initial player and stats settings
-health = 3
+# train player and stats settings
+health = 5
 score = 0
 difficulty = 5  # 2 < d < 6 = 3, 4, 5
+
+# exam player and stats settings
+exam_health = 3
+exam_score = 0

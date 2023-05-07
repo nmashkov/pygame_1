@@ -35,8 +35,13 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
 
     # LOGS
     print(dwall_list)
-    dwall_log.info({'time': str(dt.now()),
-                    'message': 'create_new_dwall'})
+    dwall_log.info(
+            {
+                'time': str(dt.now()),
+                'message': 'create_new_dwall',
+                'dwall_list': dwall_list
+            }
+        )
 
     new_dwall = [pygame.Rect(70 * j - 70,
                              -70,
@@ -109,7 +114,8 @@ class Dwall:
                         {
                             'time': str(dt.now()),
                             'message': 'death',
-                            'health': self.player.health
+                            'health': self.player.health,
+                            'player_pos': self.player.square.x
                         }
                     )
                     self.dwall = []
@@ -119,17 +125,29 @@ class Dwall:
                 else:
                     self.player.health -= 1
                     self.dwall = []
+                    variables.score = self.player.score
                     # LOGS
                     print('Game over')
                     dwall_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'game_over',
-                            'health': self.player.health
+                            'score': variables.score,
+                            'player_pos': self.player.square.x
                         }
                     )
                     #
-                    variables.SESSION_STAGE = 'STOP_STAGE'
-                    pygame.event.post(
-                        pygame.event.Event(event_manager.STOP_STAGE))
-                    pygame.event.post(self.app.quit_event)
+                    if variables.SESSION_STAGE == 'START_TRAIN':
+                        variables.SESSION_STAGE = 'STOP_STAGE'
+                        pygame.event.post(
+                            pygame.event.Event(event_manager.STOP_STAGE))
+                        variables.SESSION_STAGE = 'START_EXAM'
+                        pygame.event.post(
+                            pygame.event.Event(event_manager.START_EXAM))
+                        self.player.health = settings.exam_health
+                        self.player.score = settings.exam_score
+                    elif variables.SESSION_STAGE == 'START_EXAM':
+                        variables.SESSION_STAGE = 'STOP_STAGE'
+                        pygame.event.post(
+                            pygame.event.Event(event_manager.STOP_STAGE))
+                        variables.SESSION_STAGE = 'RESULT'
