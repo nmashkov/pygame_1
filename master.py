@@ -7,7 +7,7 @@ from dwall import Dwall
 from debug import debug
 from event_manager import (
     event_handler,
-    START_MENU, START_TRAIN, RESULT)
+    START_MENU, START_TRAIN, START_EXAM, RESULT)
 # debug(info, pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
 
 
@@ -89,6 +89,47 @@ class App:
 
         self.app_caption('game')
 
+    def pre_exam(self):
+
+        in_pre_exam = True
+        while in_pre_exam:
+            delta_t = self.clock.tick(15) / 1000 * 60
+
+            event_handler()
+
+            self.screen.fill(self.bg_color)
+
+            self.player.update(delta_t)
+
+            key = pygame.key.get_pressed()
+            if key[pygame.K_RETURN]:
+                pygame.event.post(pygame.event.Event(START_EXAM))
+                variables.SESSION_STAGE = 'START_EXAM'
+                in_pre_exam = False
+
+            self.screen.blit(
+                self.font.render(variables.SESSION_STAGE, True, 'black'),
+                (settings.WIDTH // 2, 10),
+            )
+
+            debug(variables.stage_time)
+            debug(variables.active_p, 30)
+            debug(variables.lp_active_time, 50)
+            debug(variables.rp_active_time, 70)
+            debug(variables.active_acc_p, 90)
+            debug(variables.lp_active_acc_time, 110)
+            debug(variables.rp_active_acc_time, 130)
+            debug(variables.active_kpush_p, 150)
+            debug(variables.lp_key_pushes, 170)
+            debug(variables.rp_key_pushes, 190)
+            debug(variables.cooperative_time, 210)
+            debug(variables.conflict_time, 230)
+            debug(variables.score, 250)
+
+            pygame.display.update()
+
+            self.app_caption()
+
     def exam(self, delta_t):
 
         self.screen.fill(self.bg_color)
@@ -155,6 +196,9 @@ class App:
             if variables.SESSION_STAGE == 'START_TRAIN':
                 self.train(delta_t)
                 self.player.log_player_pos()
+
+            if variables.SESSION_STAGE == 'PRE_EXAM':
+                self.pre_exam()
 
             if variables.SESSION_STAGE == 'START_EXAM':
                 self.exam(delta_t)

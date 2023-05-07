@@ -1,6 +1,6 @@
 import sys
 import pygame
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 import settings
 import variables
@@ -14,10 +14,11 @@ event_log = setup_logger('event_logger', log_file)
 
 START_MENU = pygame.USEREVENT + 1
 START_TRAIN = pygame.USEREVENT + 2
-START_EXAM = pygame.USEREVENT + 3
-STOP_STAGE = pygame.USEREVENT + 4
-RESULT = pygame.USEREVENT + 5
-PLAYER_POS = pygame.USEREVENT + 6
+PRE_EXAM = pygame.USEREVENT + 3
+START_EXAM = pygame.USEREVENT + 4
+STOP_STAGE = pygame.USEREVENT + 5
+RESULT = pygame.USEREVENT + 6
+PLAYER_POS = pygame.USEREVENT + 7
 
 
 def player_events(events):
@@ -464,7 +465,7 @@ def event_handler():
                     'SESSION': f'{settings.SESSION_DIR}'
                 }
             )
-        # START TRAIN SESSION
+        # START TRAIN STATE
         if events.type == START_TRAIN:
             variables.pl_pos_log = True
             pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
@@ -487,10 +488,63 @@ def event_handler():
                     'message': 'START_TRAIN'
                 }
             )
+        # PRE EXAM STATE
+        if events.type == PRE_EXAM:
+            event_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'PRE_EXAM'
+                }
+            )
+            if variables.lp_active_time >= variables.rp_active_time:
+                variables.active_p = 'LEFT_P'
+            else:
+                variables.active_p = 'RIGHT_P'
+            if variables.lp_active_acc_time >= variables.rp_active_acc_time:
+                variables.active_acc_p = 'LEFT_P'
+            else:
+                variables.active_acc_p = 'RIGHT_P'
+            if variables.lp_key_pushes >= variables.rp_key_pushes:
+                variables.active_kpush_p = 'LEFT_P'
+            else:
+                variables.active_kpush_p = 'RIGHT_P'
+            player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'PRE_EXAM',
+                    'score': variables.score,
+                    'stage_time': f'{variables.stage_time}',
+                    'active_p': variables.active_p,
+                    'lp_act_t': f'{variables.lp_active_time}',
+                    'rp_act_t': f'{variables.rp_active_time}',
+                    'active_acc_p': variables.active_acc_p,
+                    'lp_acc_t': f'{variables.lp_active_acc_time}',
+                    'rp_acc_t': f'{variables.rp_active_acc_time}',
+                    'active_kpush_p': variables.active_kpush_p,
+                    'lp_kpush': variables.lp_key_pushes,
+                    'rp_kpush': variables.rp_key_pushes,
+                    'coop_time': f'{variables.cooperative_time}',
+                    'conflict_time': f'{variables.conflict_time}'
+                }
+            )
+            player_pos_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'PRE_EXAM'
+                }
+            )
         # START EXAM SESSION
         if events.type == START_EXAM:
-            variables.pl_pos_log = True
-            pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
+            # RESET VARIABLES
+            variables.lp_active_time = td()
+            variables.rp_active_time = td()
+            variables.lp_active_acc_time = td()
+            variables.rp_active_acc_time = td()
+            variables.lp_key_pushes = 0
+            variables.rp_key_pushes = 0
+            variables.cooperative_time = td()
+            variables.conflict_time = td()
+            # PREPARE EXAM
             settings.dwall_speed = 6
             settings.difficulty = 4
             variables.score = 0
@@ -513,11 +567,13 @@ def event_handler():
                     'message': 'START_EXAM'
                 }
             )
+            variables.pl_pos_log = True
+            pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
         # STOP STAGE
         if events.type == STOP_STAGE:
             pygame.time.set_timer(PLAYER_POS, 0)
             variables.pl_pos_log = False
-            variables.stage_time += dt.now() - variables.start_stage_time
+            variables.stage_time = dt.now() - variables.start_stage_time
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -595,5 +651,6 @@ def event_handler():
 
         if variables.SESSION_STAGE not in ('START_MENU',
                                            'STOP_STAGE',
+                                           'PRE_EXAM',
                                            'RESULT'):
             player_events(events)

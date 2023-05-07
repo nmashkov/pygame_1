@@ -63,6 +63,7 @@ class Dwall:
         self.dwall = []
         self.dwall_list_previous = []
         self.difficulty = settings.difficulty
+        self.dwall_amount = settings.dwall_amount
 
     def draw(self):
         # drawing death wall
@@ -88,7 +89,7 @@ class Dwall:
         # death wall moving and checks
         for dblock in self.dwall:
             dblock.y += self.dwall_speed * delta_t
-
+            # collision with line
             collision_with_line = line.collidelistall(self.dwall)
             if len(collision_with_line) > 0:
                 self.dwall = []
@@ -103,7 +104,7 @@ class Dwall:
                     }
                 )
                 break
-
+            # collision with player
             collisions = self.player.square.collidelistall(self.dwall)
             if len(collisions) > 0:
                 if self.player.health > 1:
@@ -136,14 +137,14 @@ class Dwall:
                             'player_pos': self.player.square.x
                         }
                     )
-                    #
+                    # SESSION STATE CHANGE
                     if variables.SESSION_STAGE == 'START_TRAIN':
                         variables.SESSION_STAGE = 'STOP_STAGE'
                         pygame.event.post(
                             pygame.event.Event(event_manager.STOP_STAGE))
-                        variables.SESSION_STAGE = 'START_EXAM'
+                        variables.SESSION_STAGE = 'PRE_EXAM'
                         pygame.event.post(
-                            pygame.event.Event(event_manager.START_EXAM))
+                            pygame.event.Event(event_manager.PRE_EXAM))
                         self.player.health = settings.exam_health
                         self.player.score = settings.exam_score
                     elif variables.SESSION_STAGE == 'START_EXAM':

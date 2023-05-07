@@ -38,10 +38,12 @@ dblock_color = (255, 107, 107)
 dwall_speed = 4
 
 # train player and stats settings
-health = 5
+dwall_amount = 30
+health = 3
 score = 0
 difficulty = 5  # 2 < d < 6 = 3, 4, 5
 
 # exam player and stats settings
+exam_dwall_amount = 60
 exam_health = 3
 exam_score = 0

@@ -68,6 +68,7 @@ class Player:
         # player controls
         key = pygame.key.get_pressed()
         if variables.SESSION_STAGE not in ('START_MENU',
+                                           'PRE_EXAM',
                                            'STOP_STAGE',
                                            'RESULT'):
             # move left
