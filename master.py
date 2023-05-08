@@ -1,3 +1,9 @@
+"""
+Game 1.
+Author: Nikita Mashkov
+Github: https://github.com/nmashkov
+2023
+"""
 import pygame
 
 import settings
