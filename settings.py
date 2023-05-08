@@ -26,10 +26,13 @@ PLPOSLOG_TIMER = 100
 LEFT_1 = pygame.K_a
 RIGHT_1 = pygame.K_d
 ACCELERATE_1 = pygame.K_s
+START_1 = pygame.K_w
 LEFT_2 = pygame.K_LEFT
 RIGHT_2 = pygame.K_RIGHT
 ACCELERATE_2 = pygame.K_DOWN
+START_2 = pygame.K_UP
 EXIT = pygame.K_ESCAPE
+CONTINUE = pygame.K_RETURN
 
 # death wall settings
 dblock_w = 70
