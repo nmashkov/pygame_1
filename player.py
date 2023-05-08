@@ -89,9 +89,9 @@ class Player:
                 self.square.right += self.square_speed * delta_t
             # accelerate death wall
             if key[self.acc_button_1] or key[self.acc_button_2]:
-                self.app.dwall.dwall_speed = settings.dwall_speed * 2
+                variables.dwall_speed = variables.acc_dwall_speed
             else:
-                self.app.dwall.dwall_speed = settings.dwall_speed
+                variables.dwall_speed = variables.acc_dwall_speed / 2
             # pause game
             if key[pygame.K_p]:
                 pause(self.app)

@@ -35,15 +35,17 @@ EXIT = pygame.K_ESCAPE
 dblock_w = 70
 dblock_h = 70
 dblock_color = (255, 107, 107)
-dwall_speed = 4
 
 # train player and stats settings
+dwall_speed = 4
 dwall_amount = 30
 health = 3
 score = 0
 difficulty = 5  # 2 < d < 6 = 3, 4, 5
 
 # exam player and stats settings
+exam_dwall_speed = 5
 exam_dwall_amount = 60
 exam_health = 3
 exam_score = 0
+exam_difficulty = 4  # 2 < d < 6 = 3, 4, 5

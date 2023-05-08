@@ -70,14 +70,53 @@ class Dwall:
         [pygame.draw.rect(self.app.screen, self.dblock_color, dblock)
          for dblock in self.dwall]
 
+    def check_difficulty(self):
+        self.dwall_speed = variables.dwall_speed
+        self.difficulty = variables.dwall_difficulty
+        if variables.SESSION_STAGE == 'START_TRAIN':
+            if (not variables.dwall_changed and
+                    self.dwall_amount != settings.dwall_amount and
+                    self.dwall_amount % 5 == 0):
+                pygame.event.post(pygame.event.Event(event_manager.DWALL_DIFF))
+        if variables.SESSION_STAGE == 'START_EXAM':
+            if (not variables.dwall_changed and
+                    self.dwall_amount != settings.exam_dwall_amount and
+                    self.dwall_amount % 10 == 0):
+                pygame.event.post(pygame.event.Event(event_manager.DWALL_DIFF))
+
+    def change_state(self):
+        # SESSION STATE CHANGE
+        if variables.SESSION_STAGE == 'START_TRAIN':
+            variables.SESSION_STAGE = 'STOP_STAGE'
+            pygame.event.post(
+                pygame.event.Event(event_manager.STOP_STAGE))
+            variables.SESSION_STAGE = 'PRE_EXAM'
+            pygame.event.post(
+                pygame.event.Event(event_manager.PRE_EXAM))
+            self.dwall_amount = settings.exam_dwall_amount
+            self.difficulty = settings.exam_difficulty
+            self.player.health = settings.exam_health
+            self.player.score = settings.exam_score
+        elif variables.SESSION_STAGE == 'START_EXAM':
+            variables.SESSION_STAGE = 'STOP_STAGE'
+            pygame.event.post(
+                pygame.event.Event(event_manager.STOP_STAGE))
+            variables.SESSION_STAGE = 'RESULT'
+
     def update(self, delta_t):
+        # check difficulty
+        self.check_difficulty()
         # creating death wall
-        if len(self.dwall) == 0:
-            self.dwall, self.dwall_list_previous = dwall_new(
-                self.dblock_w,
-                self.dblock_h,
-                self.dwall_list_previous,
-                self.difficulty)
+        if self.dwall_amount > 0:
+            if len(self.dwall) == 0:
+                self.dwall, self.dwall_list_previous = dwall_new(
+                    self.dblock_w,
+                    self.dblock_h,
+                    self.dwall_list_previous,
+                    self.difficulty)
+                variables.dwall_changed = False
+        else:
+            self.change_state()
 
         # drawing checkline
         line = pygame.draw.line(self.app.screen,
@@ -93,6 +132,7 @@ class Dwall:
             collision_with_line = line.collidelistall(self.dwall)
             if len(collision_with_line) > 0:
                 self.dwall = []
+                self.dwall_amount -= 1
                 self.player.score += 1
                 # LOGS
                 print(f'points: {self.player.score}')
@@ -108,6 +148,7 @@ class Dwall:
             collisions = self.player.square.collidelistall(self.dwall)
             if len(collisions) > 0:
                 if self.player.health > 1:
+                    self.dwall_amount -= 1
                     self.player.health -= 1
                     # LOGS
                     print(f'Death. Remains {self.player.health} attempts')
@@ -137,18 +178,4 @@ class Dwall:
                             'player_pos': self.player.square.x
                         }
                     )
-                    # SESSION STATE CHANGE
-                    if variables.SESSION_STAGE == 'START_TRAIN':
-                        variables.SESSION_STAGE = 'STOP_STAGE'
-                        pygame.event.post(
-                            pygame.event.Event(event_manager.STOP_STAGE))
-                        variables.SESSION_STAGE = 'PRE_EXAM'
-                        pygame.event.post(
-                            pygame.event.Event(event_manager.PRE_EXAM))
-                        self.player.health = settings.exam_health
-                        self.player.score = settings.exam_score
-                    elif variables.SESSION_STAGE == 'START_EXAM':
-                        variables.SESSION_STAGE = 'STOP_STAGE'
-                        pygame.event.post(
-                            pygame.event.Event(event_manager.STOP_STAGE))
-                        variables.SESSION_STAGE = 'RESULT'
+                    self.change_state()

@@ -19,6 +19,7 @@ START_EXAM = pygame.USEREVENT + 4
 STOP_STAGE = pygame.USEREVENT + 5
 RESULT = pygame.USEREVENT + 6
 PLAYER_POS = pygame.USEREVENT + 7
+DWALL_DIFF = pygame.USEREVENT + 8
 
 
 def player_events(events):
@@ -545,8 +546,10 @@ def event_handler():
             variables.cooperative_time = td()
             variables.conflict_time = td()
             # PREPARE EXAM
-            settings.dwall_speed = 6
-            settings.difficulty = 4
+            variables.dwall_speed = settings.exam_dwall_speed
+            variables.acc_dwall_speed = variables.dwall_speed * 2
+            variables.dwall_amount = settings.exam_dwall_amount
+            variables.dwall_difficulty = settings.exam_difficulty
             variables.score = 0
             variables.start_stage_time = dt.now()
             event_log.info(
@@ -648,6 +651,28 @@ def event_handler():
             )
             pygame.quit()
             sys.exit()
+        # DWALL CHANGE DIFFICULTY
+        if events.type == DWALL_DIFF:
+            if variables.SESSION_STAGE == 'START_TRAIN':
+                if variables.accelerate:
+                    variables.dwall_speed = (variables.dwall_speed / 2) + 0.5
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                    variables.dwall_changed = True
+                else:
+                    variables.dwall_speed += 0.5
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                    variables.dwall_changed = True
+            if variables.SESSION_STAGE == 'START_EXAM':
+                if variables.accelerate:
+                    variables.dwall_speed = (variables.dwall_speed / 2) + 0.25
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                    variables.dwall_changed = True
+                else:
+                    variables.dwall_speed += 0.25
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                    variables.dwall_changed = True
+                if variables.dwall_amount == 50:
+                    variables.dwall_difficulty -= 1
 
         if variables.SESSION_STAGE not in ('START_MENU',
                                            'STOP_STAGE',

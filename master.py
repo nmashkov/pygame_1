@@ -43,6 +43,9 @@ class App:
         debug(self.dwall.dwall_list_previous)
         debug(self.player.health, 30)
         debug(self.player.score, 50)
+        debug(self.dwall.dwall_amount, 70)
+        debug(self.dwall.dwall_speed, 90)
+        debug(self.dwall.difficulty, 110)
 
     def draw(self):
         self.player.draw()
@@ -128,7 +131,7 @@ class App:
 
             pygame.display.update()
 
-            self.app_caption()
+            self.app_caption(mode='game')
 
     def exam(self, delta_t):
 

@@ -1,10 +1,17 @@
 import datetime as dt
 
+import settings
+
 
 SESSION_STAGE = ''
 # START_MENU, START_TRAIN, PRE_EXAM, START_EXAM, STOP_STAGE, RESULT
 
 score = 0
+dwall_amount = settings.dwall_amount
+dwall_speed = settings.dwall_speed
+acc_dwall_speed = dwall_speed * 2
+dwall_difficulty = settings.difficulty
+dwall_changed = False
 
 start_stage_time = dt.datetime.now()
 stage_time = dt.timedelta()
