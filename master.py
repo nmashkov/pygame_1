@@ -167,12 +167,12 @@ class App:
                 self.train(delta_t)
                 self.player.log_player_pos()
 
-            if variables.SESSION_STAGE == 'PRE_EXAM':
-                self.pre_exam()
-
             if variables.SESSION_STAGE == 'START_EXAM':
                 self.exam(delta_t)
                 self.player.log_player_pos()
+
+            if variables.SESSION_STAGE == 'PRE_EXAM':
+                self.pre_exam()
 
             if variables.SESSION_STAGE == 'RESULT':
                 break
