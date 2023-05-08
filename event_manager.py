@@ -525,7 +525,9 @@ def event_handler():
                     'lp_kpush': variables.lp_key_pushes,
                     'rp_kpush': variables.rp_key_pushes,
                     'coop_time': f'{variables.cooperative_time}',
-                    'conflict_time': f'{variables.conflict_time}'
+                    'conflict_time': f'{variables.conflict_time}',
+                    'max_dwall_speed': variables.dwall_speed,
+                    'end_difficulty': variables.dwall_difficulty
                 }
             )
             player_pos_log.info(
@@ -634,7 +636,9 @@ def event_handler():
                     'lp_kpush': variables.lp_key_pushes,
                     'rp_kpush': variables.rp_key_pushes,
                     'coop_time': f'{variables.cooperative_time}',
-                    'conflict_time': f'{variables.conflict_time}'
+                    'conflict_time': f'{variables.conflict_time}',
+                    'max_dwall_speed': variables.dwall_speed,
+                    'end_difficulty': variables.dwall_difficulty
                 }
             )
         # RESULT
@@ -655,24 +659,24 @@ def event_handler():
         if events.type == DWALL_DIFF:
             if variables.SESSION_STAGE == 'START_TRAIN':
                 if variables.accelerate:
-                    variables.dwall_speed = (variables.dwall_speed / 2) + 0.5
+                    variables.dwall_speed = ((variables.dwall_speed / 2) +
+                                             settings.dw_sp_step)
                     variables.acc_dwall_speed = variables.dwall_speed * 2
-                    variables.dwall_changed = True
                 else:
-                    variables.dwall_speed += 0.5
+                    variables.dwall_speed += settings.dw_sp_step
                     variables.acc_dwall_speed = variables.dwall_speed * 2
-                    variables.dwall_changed = True
-            if variables.SESSION_STAGE == 'START_EXAM':
+                variables.dwall_changed = True
+            elif variables.SESSION_STAGE == 'START_EXAM':
                 if variables.accelerate:
-                    variables.dwall_speed = (variables.dwall_speed / 2) + 0.25
+                    variables.dwall_speed = ((variables.dwall_speed / 2) +
+                                             settings.ex_dw_sp_step)
                     variables.acc_dwall_speed = variables.dwall_speed * 2
-                    variables.dwall_changed = True
                 else:
-                    variables.dwall_speed += 0.25
+                    variables.dwall_speed += settings.ex_dw_sp_step
                     variables.acc_dwall_speed = variables.dwall_speed * 2
-                    variables.dwall_changed = True
-                if variables.dwall_amount == 50:
-                    variables.dwall_difficulty -= 1
+                variables.dwall_changed = True
+                if variables.dwall_amount == settings.ex_dw_am_dif:
+                    variables.dwall_difficulty -= settings.ex_dw_dif_step
 
         if variables.SESSION_STAGE not in ('START_MENU',
                                            'STOP_STAGE',

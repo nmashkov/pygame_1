@@ -71,18 +71,31 @@ class Dwall:
          for dblock in self.dwall]
 
     def check_difficulty(self):
+        variables.dwall_amount = self.dwall_amount
         self.dwall_speed = variables.dwall_speed
         self.difficulty = variables.dwall_difficulty
         if variables.SESSION_STAGE == 'START_TRAIN':
             if (not variables.dwall_changed and
                     self.dwall_amount != settings.dwall_amount and
-                    self.dwall_amount % 5 == 0):
+                    self.dwall_amount % settings.dw_am_sp == 0):
                 pygame.event.post(pygame.event.Event(event_manager.DWALL_DIFF))
-        if variables.SESSION_STAGE == 'START_EXAM':
+                dwall_log.info(
+                    {
+                        'time': f'{dt.now()}',
+                        'message': 'DIFFICULTY_UP'
+                    }
+                )
+        elif variables.SESSION_STAGE == 'START_EXAM':
             if (not variables.dwall_changed and
                     self.dwall_amount != settings.exam_dwall_amount and
-                    self.dwall_amount % 10 == 0):
+                    self.dwall_amount % settings.ex_dw_am_sp == 0):
                 pygame.event.post(pygame.event.Event(event_manager.DWALL_DIFF))
+                dwall_log.info(
+                    {
+                        'time': f'{dt.now()}',
+                        'message': 'DIFFICULTY_UP'
+                    }
+                )
 
     def change_state(self):
         # SESSION STATE CHANGE
@@ -157,7 +170,9 @@ class Dwall:
                             'time': str(dt.now()),
                             'message': 'death',
                             'health': self.player.health,
-                            'player_pos': self.player.square.x
+                            'player_pos': self.player.square.x,
+                            'max_dwall_speed': variables.dwall_speed,
+                            'difficulty': variables.dwall_difficulty
                         }
                     )
                     self.dwall = []
@@ -175,7 +190,9 @@ class Dwall:
                             'time': str(dt.now()),
                             'message': 'game_over',
                             'score': variables.score,
-                            'player_pos': self.player.square.x
+                            'player_pos': self.player.square.x,
+                            'max_dwall_speed': variables.dwall_speed,
+                            'difficulty': variables.dwall_difficulty
                         }
                     )
                     self.change_state()

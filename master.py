@@ -70,7 +70,7 @@ class App:
             self.player.update(delta_t)
 
             key = pygame.key.get_pressed()
-            if key[pygame.K_RETURN]:
+            if key[pygame.K_w] and key[pygame.K_UP]:
                 pygame.event.post(pygame.event.Event(START_TRAIN))
                 variables.SESSION_STAGE = 'START_TRAIN'
                 in_menu = False
@@ -105,7 +105,7 @@ class App:
             self.player.update(delta_t)
 
             key = pygame.key.get_pressed()
-            if key[pygame.K_RETURN]:
+            if key[pygame.K_w] and key[pygame.K_UP]:
                 pygame.event.post(pygame.event.Event(START_EXAM))
                 variables.SESSION_STAGE = 'START_EXAM'
                 in_pre_exam = False
@@ -128,6 +128,8 @@ class App:
             debug(variables.cooperative_time, 210)
             debug(variables.conflict_time, 230)
             debug(variables.score, 250)
+            debug(variables.dwall_speed, 270)
+            debug(variables.dwall_difficulty, 290)
 
             pygame.display.update()
 
@@ -156,7 +158,7 @@ class App:
             self.player.update(delta_t)
 
             key = pygame.key.get_pressed()
-            if key[pygame.K_RETURN]:
+            if key[pygame.K_RETURN] or key[pygame.K_ESCAPE]:
                 in_result = False
 
             self.screen.blit(
@@ -179,6 +181,8 @@ class App:
             debug(variables.cooperative_time, 210)
             debug(variables.conflict_time, 230)
             debug(self.player.score, 250)
+            debug(variables.dwall_speed, 270)
+            debug(variables.dwall_difficulty, 290)
 
             pygame.display.update()
 
