@@ -468,6 +468,7 @@ def event_handler():
             )
         # START TRAIN STATE
         if events.type == START_TRAIN:
+            variables.is_warmuped = False
             variables.pl_pos_log = True
             pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
             variables.start_stage_time = dt.now()
@@ -529,7 +530,8 @@ def event_handler():
                     'coop_time': f'{variables.cooperative_time}',
                     'conflict_time': f'{variables.conflict_time}',
                     'max_dwall_speed': variables.dwall_speed,
-                    'end_difficulty': variables.dwall_difficulty
+                    'end_difficulty': variables.dwall_difficulty,
+                    'dwall_amount': variables.dwall_amount
                 }
             )
             player_pos_log.info(
@@ -541,6 +543,7 @@ def event_handler():
         # START EXAM SESSION
         if events.type == START_EXAM:
             # RESET VARIABLES
+            variables.is_warmuped = False
             variables.lp_active_time = td()
             variables.rp_active_time = td()
             variables.lp_active_acc_time = td()
@@ -642,7 +645,8 @@ def event_handler():
                     'coop_time': f'{variables.cooperative_time}',
                     'conflict_time': f'{variables.conflict_time}',
                     'max_dwall_speed': variables.dwall_speed,
-                    'end_difficulty': variables.dwall_difficulty
+                    'end_difficulty': variables.dwall_difficulty,
+                    'dwall_amount': variables.dwall_amount
                 }
             )
         # RESULT
@@ -679,7 +683,8 @@ def event_handler():
                     variables.dwall_speed += settings.ex_dw_sp_step
                     variables.acc_dwall_speed = variables.dwall_speed * 2
                 variables.dwall_changed = True
-                if variables.dwall_amount == settings.ex_dw_am_dif:
+                if variables.dwall_amount in (settings.ex_dw_am_dif_1,
+                                              settings.ex_dw_am_dif_2):
                     variables.dwall_difficulty -= settings.ex_dw_dif_step
 
         if variables.SESSION_STAGE not in ('START_MENU',

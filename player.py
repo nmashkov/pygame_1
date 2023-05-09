@@ -13,19 +13,6 @@ log_file = 'player_pos.json'
 player_pos_log = setup_logger('player_pos_logger', log_file)
 
 
-def pause(app):
-    paused = True
-    while paused:
-        [exit() for i in pygame.event.get() if i.type == pygame.QUIT]
-
-        key = pygame.key.get_pressed()
-        if key[pygame.K_RETURN]:
-            paused = False
-
-        # pygame.display.update()
-        app.clock.tick(15)
-
-
 class Player:
     def __init__(self, app):
         self.app = app
@@ -92,9 +79,6 @@ class Player:
                 variables.dwall_speed = variables.acc_dwall_speed
             else:
                 variables.dwall_speed = variables.acc_dwall_speed / 2
-            # pause game
-            if key[pygame.K_p]:
-                pause(self.app)
 
         # exit app
         if key[self.exit_button]:

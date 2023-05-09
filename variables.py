@@ -12,6 +12,7 @@ dwall_speed = settings.dwall_speed
 acc_dwall_speed = dwall_speed * 2
 dwall_difficulty = settings.difficulty
 dwall_changed = False
+is_warmuped = False
 
 start_stage_time = dt.datetime.now()
 stage_time = dt.timedelta()

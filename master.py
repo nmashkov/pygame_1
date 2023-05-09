@@ -86,9 +86,32 @@ class App:
 
             self.app_caption('menu')
 
+    def warmup(self):
+        start_ticks = pygame.time.get_ticks()
+        while True:
+            self.screen.fill(self.bg_color)
+
+            seconds = (pygame.time.get_ticks() - start_ticks) / 1000
+
+            self.screen.blit(
+                self.font.render(f'{seconds:.2}', True, 'black'),
+                (settings.WIDTH // 2, settings.HEIGHT // 2))
+
+            if seconds > settings.warmup_time:
+                break
+
+            pygame.display.update()
+
+            self.clock.tick(30)
+
+        variables.is_warmuped = True
+
     def train(self, delta_t):
 
         self.screen.fill(self.bg_color)
+
+        if not variables.is_warmuped:
+            self.warmup()
 
         self.update(delta_t)
         self.draw()
@@ -122,6 +145,9 @@ class App:
     def exam(self, delta_t):
 
         self.screen.fill(self.bg_color)
+
+        if not variables.is_warmuped:
+            self.warmup()
 
         self.update(delta_t)
         self.draw()

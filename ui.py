@@ -37,6 +37,7 @@ def ui_pre_exam(screen, font):
     debug(variables.score, 250)
     debug(variables.dwall_speed, 270)
     debug(variables.dwall_difficulty, 290)
+    debug(variables.dwall_amount, 310)
 
 
 def ui_result(screen, font):
@@ -59,3 +60,4 @@ def ui_result(screen, font):
     debug(variables.score, 250)
     debug(variables.dwall_speed, 270)
     debug(variables.dwall_difficulty, 290)
+    debug(variables.dwall_amount, 310)

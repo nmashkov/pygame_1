@@ -74,28 +74,33 @@ class Dwall:
         variables.dwall_amount = self.dwall_amount
         self.dwall_speed = variables.dwall_speed
         self.difficulty = variables.dwall_difficulty
-        if variables.SESSION_STAGE == 'START_TRAIN':
-            if (not variables.dwall_changed and
-                    self.dwall_amount != settings.dwall_amount and
-                    self.dwall_amount % settings.dw_am_sp == 0):
-                pygame.event.post(pygame.event.Event(event_manager.DWALL_DIFF))
-                dwall_log.info(
-                    {
-                        'time': f'{dt.now()}',
-                        'message': 'DIFFICULTY_UP'
-                    }
-                )
-        elif variables.SESSION_STAGE == 'START_EXAM':
-            if (not variables.dwall_changed and
-                    self.dwall_amount != settings.exam_dwall_amount and
-                    self.dwall_amount % settings.ex_dw_am_sp == 0):
-                pygame.event.post(pygame.event.Event(event_manager.DWALL_DIFF))
-                dwall_log.info(
-                    {
-                        'time': f'{dt.now()}',
-                        'message': 'DIFFICULTY_UP'
-                    }
-                )
+        if self.dwall_amount != 0:
+            if variables.SESSION_STAGE == 'START_TRAIN':
+                if (not variables.dwall_changed and
+                        self.dwall_amount != settings.dwall_amount and
+                        self.dwall_amount % settings.dw_am_sp == 0):
+                    pygame.event.post(
+                        pygame.event.Event(event_manager.DWALL_DIFF))
+                    dwall_log.info(
+                        {
+                            'time': f'{dt.now()}',
+                            'message': 'DIFFICULTY_UP',
+                            'dwall_amount': variables.dwall_amount
+                        }
+                    )
+            elif variables.SESSION_STAGE == 'START_EXAM':
+                if (not variables.dwall_changed and
+                        self.dwall_amount != settings.exam_dwall_amount and
+                        self.dwall_amount % settings.ex_dw_am_sp == 0):
+                    pygame.event.post(
+                        pygame.event.Event(event_manager.DWALL_DIFF))
+                    dwall_log.info(
+                        {
+                            'time': f'{dt.now()}',
+                            'message': 'DIFFICULTY_UP',
+                            'dwall_amount': variables.dwall_amount
+                        }
+                    )
 
     def change_state(self):
         # SESSION STATE CHANGE
