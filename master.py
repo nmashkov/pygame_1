@@ -159,7 +159,7 @@ class App:
         self.start_menu()
 
         while True:
-            delta_t = self.clock.tick(self.fps) / 1000 * 60
+            delta_t = self.clock.tick(self.fps) * 0.001 * 60
 
             event_handler()
 
