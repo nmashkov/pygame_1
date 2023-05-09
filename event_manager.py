@@ -511,7 +511,7 @@ def event_handler():
             else:
                 variables.active_kpush_p = 'RIGHT_P'
             if variables.accelerate:
-                variables.dwall_speed /= 2
+                variables.dwall_speed *= .5
             player_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -626,7 +626,7 @@ def event_handler():
             else:
                 variables.active_kpush_p = 'RIGHT_P'
             if variables.accelerate:
-                variables.dwall_speed /= 2
+                variables.dwall_speed *= .5
             player_log.info(
                 {
                     'time': f'{dt.now()}',

@@ -5,7 +5,7 @@ import pygame
 
 
 # main game settings
-NAME = 'Game 1'
+NAME = 'Игра 1'
 WIDTH, HEIGHT = 700, 900
 FPS = 60
 bg_color = (190, 190, 190)

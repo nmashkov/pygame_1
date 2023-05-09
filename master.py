@@ -10,7 +10,7 @@ import settings
 import variables
 from player import Player
 from dwall import Dwall
-from debug import debug
+# from debug import debug
 from event_manager import (
     event_handler,
     START_MENU, START_TRAIN, START_EXAM, RESULT)
@@ -47,17 +47,11 @@ class App:
     def update(self, delta_t):
         self.player.update(delta_t)
         self.dwall.update(delta_t)
-        debug(self.dwall.dwall_list_previous)
-        debug(self.player.health, 30)
-        debug(self.player.score, 50)
-        debug(self.dwall.dwall_amount, 70)
-        debug(self.dwall.dwall_speed, 90)
-        debug(self.dwall.difficulty, 110)
 
     def draw(self):
         self.player.draw()
         self.dwall.draw()
-        ui.ui_game(self.screen, self.font)
+        ui.ui_game(self.screen, self.font, self.player)
         pygame.display.update()
 
     def start_menu(self):
@@ -94,8 +88,8 @@ class App:
             seconds = (pygame.time.get_ticks() - start_ticks) / 1000
 
             self.screen.blit(
-                self.font.render(f'{seconds:.2}', True, 'black'),
-                (settings.WIDTH // 2, settings.HEIGHT // 2))
+                self.font.render(f'{seconds:.2f}', True, 'black'),
+                (settings.WIDTH // 2 - 30, settings.HEIGHT // 2))
 
             if seconds > settings.warmup_time:
                 break

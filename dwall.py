@@ -134,6 +134,7 @@ class Dwall:
                     self.difficulty)
                 variables.dwall_changed = False
         else:
+            variables.score = self.player.score
             self.change_state()
 
         # drawing checkline
