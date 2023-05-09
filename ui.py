@@ -1,11 +1,11 @@
-# import pygame
+import pygame
 
 import settings
 import variables
 from debug import debug
 
 
-def ui_menu(screen, font):
+def ui_menu(screen, font: pygame.font.Font):
     screen.blit(
         font.render(variables.SESSION_STAGE, True, 'black'),
         (settings.WIDTH // 2, 10))
