@@ -45,6 +45,25 @@ def ui_menu(screen, font: pygame.font.Font):
     screen.blit(
         font.render('и стрелку вверх (^)', True, 'black'),
         (left, top*15))
+    # player
+    screen.blit(
+        font.render('Управляете этим квадратом.', True, 'black'),
+        (settings.WIDTH * 0.27, settings.HEIGHT - top*4))
+    square = pygame.Rect(settings.WIDTH // 2 - 50 // 2,
+                         settings.HEIGHT - 50 - 30, 50, 50)
+    pygame.draw.rect(screen, settings.square_color, square)
+    # dwall
+    screen.blit(
+        font.render('Проходите подобные препятствия.', True, 'black'),
+        (settings.WIDTH * 0.27, settings.HEIGHT - 350))
+    dwall_list = [0, 0, 2, 3, 4, 0, 6, 7, 8, 9, 0]
+    new_dwall = [pygame.Rect(70 * j - 70,
+                             settings.HEIGHT-300,
+                             settings.dblock_w,
+                             settings.dblock_h) for j in dwall_list]
+    [pygame.draw.rect(screen, settings.dblock_color, dblock)
+        for dblock in new_dwall]
+
 
 
 def ui_game(screen, font, player):
