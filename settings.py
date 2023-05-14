@@ -15,6 +15,16 @@ BASE_DIR = str(pathlib.Path().resolve())
 BASE_LOGS_DIR = 'logs'
 SESSION_DIR = str(uuid.uuid1())
 
+# EVENTS
+START_MENU = pygame.USEREVENT + 1
+START_TRAIN = pygame.USEREVENT + 2
+PRE_EXAM = pygame.USEREVENT + 3
+START_EXAM = pygame.USEREVENT + 4
+STOP_STAGE = pygame.USEREVENT + 5
+RESULT = pygame.USEREVENT + 6
+PLAYER_POS = pygame.USEREVENT + 7
+DWALL_DIFF = pygame.USEREVENT + 8
+
 # player square settings
 square_color = (136, 39, 255)
 square_w = 50

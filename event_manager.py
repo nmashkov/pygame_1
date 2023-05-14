@@ -6,20 +6,11 @@ import settings
 import variables
 from logger import setup_logger
 from player import player_log, player_pos_log
+from dwall import dwall_log
 
 
 log_file = 'events.json'
 event_log = setup_logger('event_logger', log_file)
-
-
-START_MENU = pygame.USEREVENT + 1
-START_TRAIN = pygame.USEREVENT + 2
-PRE_EXAM = pygame.USEREVENT + 3
-START_EXAM = pygame.USEREVENT + 4
-STOP_STAGE = pygame.USEREVENT + 5
-RESULT = pygame.USEREVENT + 6
-PLAYER_POS = pygame.USEREVENT + 7
-DWALL_DIFF = pygame.USEREVENT + 8
 
 
 def player_events(events):
@@ -458,7 +449,7 @@ def event_handler():
     for events in pygame.event.get():
         # EVENTS SECTION
         # START MENU
-        if events.type == START_MENU:
+        if events.type == settings.START_MENU:
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -467,11 +458,8 @@ def event_handler():
                 }
             )
         # START TRAIN STATE
-        if events.type == START_TRAIN:
+        if events.type == settings.START_TRAIN:
             variables.is_warmuped = False
-            variables.pl_pos_log = True
-            pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
-            variables.start_stage_time = dt.now()
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -490,8 +478,14 @@ def event_handler():
                     'message': 'START_TRAIN'
                 }
             )
+            dwall_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_TRAIN'
+                }
+            )
         # PRE EXAM STATE
-        if events.type == PRE_EXAM:
+        if events.type == settings.PRE_EXAM:
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -541,7 +535,7 @@ def event_handler():
                 }
             )
         # START EXAM SESSION
-        if events.type == START_EXAM:
+        if events.type == settings.START_EXAM:
             # RESET VARIABLES
             variables.is_warmuped = False
             variables.lp_active_time = td()
@@ -558,7 +552,6 @@ def event_handler():
             variables.dwall_amount = settings.exam_dwall_amount
             variables.dwall_difficulty = settings.exam_difficulty
             variables.score = 0
-            variables.start_stage_time = dt.now()
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -577,11 +570,9 @@ def event_handler():
                     'message': 'START_EXAM'
                 }
             )
-            variables.pl_pos_log = True
-            pygame.time.set_timer(PLAYER_POS, settings.PLPOSLOG_TIMER)
         # STOP STAGE
-        if events.type == STOP_STAGE:
-            pygame.time.set_timer(PLAYER_POS, 0)
+        if events.type == settings.STOP_STAGE:
+            pygame.time.set_timer(settings.PLAYER_POS, 0)
             variables.pl_pos_log = False
             variables.stage_time = dt.now() - variables.start_stage_time
             event_log.info(
@@ -606,7 +597,7 @@ def event_handler():
                 }
             )
         # RESULT
-        if events.type == RESULT:
+        if events.type == settings.RESULT:
             event_log.info(
                 {
                     'time': f'{dt.now()}',
@@ -650,7 +641,7 @@ def event_handler():
                 }
             )
         # RESULT
-        if events.type == PLAYER_POS:
+        if events.type == settings.PLAYER_POS:
             variables.pl_pos_log = True
         # QUIT APP
         if events.type == pygame.QUIT:
@@ -664,7 +655,7 @@ def event_handler():
             pygame.quit()
             sys.exit()
         # DWALL CHANGE DIFFICULTY
-        if events.type == DWALL_DIFF:
+        if events.type == settings.DWALL_DIFF:
             if variables.SESSION_STAGE == 'START_TRAIN':
                 if variables.accelerate:
                     variables.dwall_speed = ((variables.dwall_speed / 2) +
@@ -687,8 +678,5 @@ def event_handler():
                                               settings.ex_dw_am_dif_2):
                     variables.dwall_difficulty -= settings.ex_dw_dif_step
 
-        if variables.SESSION_STAGE not in ('START_MENU',
-                                           'STOP_STAGE',
-                                           'PRE_EXAM',
-                                           'RESULT'):
+        if variables.SESSION_STAGE in ('START_TRAIN', 'START_EXAM'):
             player_events(events)

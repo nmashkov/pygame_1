@@ -4,7 +4,6 @@ from datetime import datetime as dt
 
 import settings
 import variables
-import event_manager
 from logger import setup_logger
 
 
@@ -80,7 +79,7 @@ class Dwall:
                         self.dwall_amount != settings.dwall_amount and
                         self.dwall_amount % settings.dw_am_sp == 0):
                     pygame.event.post(
-                        pygame.event.Event(event_manager.DWALL_DIFF))
+                        pygame.event.Event(settings.DWALL_DIFF))
                     dwall_log.info(
                         {
                             'time': f'{dt.now()}',
@@ -93,7 +92,7 @@ class Dwall:
                         self.dwall_amount != settings.exam_dwall_amount and
                         self.dwall_amount % settings.ex_dw_am_sp == 0):
                     pygame.event.post(
-                        pygame.event.Event(event_manager.DWALL_DIFF))
+                        pygame.event.Event(settings.DWALL_DIFF))
                     dwall_log.info(
                         {
                             'time': f'{dt.now()}',
@@ -107,10 +106,10 @@ class Dwall:
         if variables.SESSION_STAGE == 'START_TRAIN':
             variables.SESSION_STAGE = 'STOP_STAGE'
             pygame.event.post(
-                pygame.event.Event(event_manager.STOP_STAGE))
+                pygame.event.Event(settings.STOP_STAGE))
             variables.SESSION_STAGE = 'PRE_EXAM'
             pygame.event.post(
-                pygame.event.Event(event_manager.PRE_EXAM))
+                pygame.event.Event(settings.PRE_EXAM))
             self.dwall_amount = settings.exam_dwall_amount
             self.difficulty = settings.exam_difficulty
             self.player.health = settings.exam_health
@@ -118,7 +117,7 @@ class Dwall:
         elif variables.SESSION_STAGE == 'START_EXAM':
             variables.SESSION_STAGE = 'STOP_STAGE'
             pygame.event.post(
-                pygame.event.Event(event_manager.STOP_STAGE))
+                pygame.event.Event(settings.STOP_STAGE))
             variables.SESSION_STAGE = 'RESULT'
 
     def update(self, delta_t):
@@ -202,3 +201,4 @@ class Dwall:
                         }
                     )
                     self.change_state()
+                    break

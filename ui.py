@@ -47,7 +47,7 @@ def ui_menu(screen, font: pygame.font.Font):
         (left, top*15))
     # player
     screen.blit(
-        font.render('Управляете этим квадратом.', True, 'black'),
+        font.render('Управляйте этим квадратом.', True, 'black'),
         (settings.WIDTH * 0.27, settings.HEIGHT - top*4))
     square = pygame.Rect(settings.WIDTH // 2 - 50 // 2,
                          settings.HEIGHT - 50 - 30, 50, 50)
@@ -63,7 +63,6 @@ def ui_menu(screen, font: pygame.font.Font):
                              settings.dblock_h) for j in dwall_list]
     [pygame.draw.rect(screen, settings.dblock_color, dblock)
         for dblock in new_dwall]
-
 
 
 def ui_game(screen, font, player):

@@ -1,50 +1,57 @@
-import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 import settings
 
 
 SESSION_STAGE = ''
-# START_MENU, START_TRAIN, PRE_EXAM, START_EXAM, STOP_STAGE, RESULT
+# START_MENU, ABOUT, INPUT_DATA, GUIDE,
+# START_TRAIN, PRE_EXAM, START_EXAM, STOP_STAGE, RESULT
+
+lp_name = ''
+rp_name = ''
+group_name = ''
 
 score = 0
+
 dwall_amount = settings.dwall_amount
 dwall_speed = settings.dwall_speed
 acc_dwall_speed = dwall_speed * 2
 dwall_difficulty = settings.difficulty
 dwall_changed = False
+
 is_warmuped = False
 
-start_stage_time = dt.datetime.now()
-stage_time = dt.timedelta()
+start_stage_time = dt.now()
+stage_time = td()
 
-lp_active_time = dt.timedelta()
-lp_left_time = dt.datetime.now()
-lp_right_time = dt.datetime.now()
-lp_accelerate_time = dt.datetime.now()
-lp_active_acc_time = dt.timedelta()
+lp_active_time = td()
+lp_left_time = dt.now()
+lp_right_time = dt.now()
+lp_accelerate_time = dt.now()
+lp_active_acc_time = td()
 lp_key_pushes = 0
 
-rp_active_time = dt.timedelta()
-rp_left_time = dt.datetime.now()
-rp_right_time = dt.datetime.now()
-rp_accelerate_time = dt.datetime.now()
-rp_active_acc_time = dt.timedelta()
+rp_active_time = td()
+rp_left_time = dt.now()
+rp_right_time = dt.now()
+rp_accelerate_time = dt.now()
+rp_active_acc_time = td()
 rp_key_pushes = 0
 
 accelerate = False
 accelerate_started = False
-accelerate_time = dt.timedelta()
-start_accelerate_time = dt.datetime.now()
+accelerate_time = td()
+start_accelerate_time = dt.now()
 
 conflict = False
 conflict_started = False
-conflict_time = dt.timedelta()
-start_conflict_time = dt.datetime.now()
+conflict_time = td()
+start_conflict_time = dt.now()
 
 cooperation = False
 coop_started = False
-cooperative_time = dt.timedelta()
-start_cooperative_time = dt.datetime.now()
+cooperative_time = td()
+start_cooperative_time = dt.now()
 
 active_p = ''
 active_acc_p = ''

@@ -1,20 +1,20 @@
 """
 Game 1.
 Author: Nikita Mashkov
+Programmer: Nikita Mashkov
 Github: https://github.com/nmashkov
 2023
 """
 import pygame
+from datetime import datetime as dt
 
 import settings
 import variables
 from player import Player
 from dwall import Dwall
-# from debug import debug
-from event_manager import (
-    event_handler,
-    START_MENU, START_TRAIN, START_EXAM, RESULT)
+from event_manager import event_handler
 import ui
+# from debug import debug
 # debug(info, pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
 
 
@@ -55,7 +55,7 @@ class App:
         pygame.display.update()
 
     def start_menu(self):
-        pygame.event.post(pygame.event.Event(START_MENU))
+        pygame.event.post(pygame.event.Event(settings.START_MENU))
         variables.SESSION_STAGE = 'START_MENU'
 
         in_menu = True
@@ -70,7 +70,7 @@ class App:
 
             key = pygame.key.get_pressed()
             if key[settings.START_1] and key[settings.START_2]:
-                pygame.event.post(pygame.event.Event(START_TRAIN))
+                pygame.event.post(pygame.event.Event(settings.START_TRAIN))
                 variables.SESSION_STAGE = 'START_TRAIN'
                 in_menu = False
 
@@ -85,13 +85,14 @@ class App:
         while True:
             self.screen.fill(self.bg_color)
 
-            seconds = (pygame.time.get_ticks() - start_ticks) / 1000
+            seconds = (settings.warmup_time -
+                       (pygame.time.get_ticks() - start_ticks) / 1000)
 
             self.screen.blit(
                 self.font.render(f'{seconds:.2f}', True, 'black'),
                 (settings.WIDTH // 2 - 30, settings.HEIGHT // 2))
 
-            if seconds > settings.warmup_time:
+            if seconds >= settings.warmup_time:
                 break
 
             pygame.display.update()
@@ -99,6 +100,9 @@ class App:
             self.clock.tick(30)
 
         variables.is_warmuped = True
+        variables.start_stage_time = dt.now()
+        variables.pl_pos_log = True
+        pygame.time.set_timer(settings.PLAYER_POS, settings.PLPOSLOG_TIMER)
 
     def train(self, delta_t):
 
@@ -126,7 +130,7 @@ class App:
 
             key = pygame.key.get_pressed()
             if key[settings.START_1] and key[settings.START_2]:
-                pygame.event.post(pygame.event.Event(START_EXAM))
+                pygame.event.post(pygame.event.Event(settings.START_EXAM))
                 variables.SESSION_STAGE = 'START_EXAM'
                 in_pre_exam = False
 
@@ -149,7 +153,7 @@ class App:
         self.app_caption('game')
 
     def result(self):
-        pygame.event.post(pygame.event.Event(RESULT))
+        pygame.event.post(pygame.event.Event(settings.RESULT))
 
         in_result = True
         while in_result:
@@ -183,9 +187,8 @@ class App:
 
             event_handler()
 
-            if variables.SESSION_STAGE == 'START_TRAIN':
-                self.train(delta_t)
-                self.player.log_player_pos()
+            if variables.SESSION_STAGE == 'RESULT':
+                break
 
             if variables.SESSION_STAGE == 'START_EXAM':
                 self.exam(delta_t)
@@ -194,8 +197,9 @@ class App:
             if variables.SESSION_STAGE == 'PRE_EXAM':
                 self.pre_exam()
 
-            if variables.SESSION_STAGE == 'RESULT':
-                break
+            if variables.SESSION_STAGE == 'START_TRAIN':
+                self.train(delta_t)
+                self.player.log_player_pos()
 
         self.result()
 

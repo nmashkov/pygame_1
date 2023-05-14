@@ -1,7 +1,7 @@
 import pygame
 
 
-pygame.init()
+pygame.font.init()
 font = pygame.font.Font(None, 30)
 
 
