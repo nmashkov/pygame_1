@@ -2,6 +2,8 @@
 /media
 /logs
 /fonts
+build.bat
+/output
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

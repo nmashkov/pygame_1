@@ -30,6 +30,7 @@ class App:
         self.fps = settings.FPS
         self.app_name = settings.NAME
         self.bg_color = settings.bg_color
+        self.pygame_icon = pygame.image.load('media/icon.ico')
         self.quit_event = pygame.event.Event(pygame.QUIT)
         self.player = Player(self)
         self.dwall = Dwall(self)
@@ -38,8 +39,8 @@ class App:
         current_fps = self.clock.get_fps()
         if mode == 'game':
             pygame.display.set_caption(f'{self.app_name}. '
-                                       f'Health: {self.player.health}. '
-                                       f'Score: {self.player.score}. '
+                                       f'Попытки: {self.player.health}. '
+                                       f'Очки: {self.player.score}. '
                                        f'FPS: {current_fps:.2f}')
         if mode == 'menu':
             pygame.display.set_caption(f'{self.app_name}. '
@@ -61,7 +62,9 @@ class App:
 
         in_menu = True
         while in_menu:
-            delta_t = self.clock.tick(15) / 1000 * 60
+            delta_t = self.clock.tick(15) * 0.001 * 60
+
+            pygame.display.set_icon(self.pygame_icon)
 
             event_handler()
 
@@ -87,7 +90,7 @@ class App:
             self.screen.fill(self.bg_color)
 
             seconds = (settings.warmup_time -
-                       (pygame.time.get_ticks() - start_ticks) / 1000)
+                       (pygame.time.get_ticks() - start_ticks) * 0.001)
 
             self.screen.blit(
                 base2.render(f'{seconds:.2f}', True, settings.dark_grey),
@@ -121,7 +124,7 @@ class App:
 
         in_pre_exam = True
         while in_pre_exam:
-            delta_t = self.clock.tick(15) / 1000 * 60
+            delta_t = self.clock.tick(15) * 0.001 * 60
 
             event_handler()
 
@@ -139,7 +142,7 @@ class App:
 
             pygame.display.update()
 
-            self.app_caption(mode='game')
+            self.app_caption()
 
     def exam(self, delta_t):
 
@@ -158,7 +161,7 @@ class App:
 
         in_result = True
         while in_result:
-            delta_t = self.clock.tick(15) / 1000 * 60
+            delta_t = self.clock.tick(15) * 0.001 * 60
 
             event_handler()
 
