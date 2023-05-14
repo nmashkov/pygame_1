@@ -2,6 +2,7 @@
 Game 1.
 Author: Nikita Mashkov
 Programmer: Nikita Mashkov
+Design: Evgeny Manuylenko
 Github: https://github.com/nmashkov
 2023
 """
