@@ -13,6 +13,7 @@ import variables
 from player import Player
 from dwall import Dwall
 from event_manager import event_handler
+from fonts import base2
 import ui
 # from debug import debug
 # debug(info, pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
@@ -28,7 +29,6 @@ class App:
         self.fps = settings.FPS
         self.app_name = settings.NAME
         self.bg_color = settings.bg_color
-        self.font = pygame.font.Font(None, 30)
         self.quit_event = pygame.event.Event(pygame.QUIT)
         self.player = Player(self)
         self.dwall = Dwall(self)
@@ -51,7 +51,7 @@ class App:
     def draw(self):
         self.player.draw()
         self.dwall.draw()
-        ui.ui_game(self.screen, self.font, self.player)
+        ui.ui_game(self.screen, self.player)
         pygame.display.update()
 
     def start_menu(self):
@@ -74,7 +74,7 @@ class App:
                 variables.SESSION_STAGE = 'START_TRAIN'
                 in_menu = False
 
-            ui.ui_menu(self.screen, self.font)
+            ui.ui_menu(self.screen)
 
             pygame.display.update()
 
@@ -89,7 +89,7 @@ class App:
                        (pygame.time.get_ticks() - start_ticks) / 1000)
 
             self.screen.blit(
-                self.font.render(f'{seconds:.2f}', True, 'black'),
+                base2.render(f'{seconds:.2f}', True, settings.dark_grey),
                 (settings.WIDTH // 2 - 30, settings.HEIGHT // 2))
 
             if seconds <= 0.03:
@@ -134,7 +134,7 @@ class App:
                 variables.SESSION_STAGE = 'START_EXAM'
                 in_pre_exam = False
 
-            ui.ui_pre_exam(self.screen, self.font)
+            ui.ui_pre_exam(self.screen)
 
             pygame.display.update()
 
@@ -169,7 +169,7 @@ class App:
             if key[settings.EXIT] or key[settings.CONTINUE]:
                 in_result = False
 
-            ui.ui_result(self.screen, self.font)
+            ui.ui_result(self.screen)
 
             pygame.display.update()
 

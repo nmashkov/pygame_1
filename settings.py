@@ -8,7 +8,7 @@ import pygame
 NAME = 'Игра 1'
 WIDTH, HEIGHT = 700, 900
 FPS = 60
-bg_color = (190, 190, 190)
+bg_color = (239, 239, 239)
 
 # log folder settings
 BASE_DIR = str(pathlib.Path().resolve())
@@ -25,8 +25,18 @@ RESULT = pygame.USEREVENT + 6
 PLAYER_POS = pygame.USEREVENT + 7
 DWALL_DIFF = pygame.USEREVENT + 8
 
+# colors
+accent = (41, 166, 236)
+back1 = (51, 128, 243)
+back1_hover = (27, 87, 177)
+back2 = (184, 209, 246)
+dark_grey = (51, 51, 51)
+light_grey = (112, 112, 112)
+light_grey2 = (215, 215, 215)
+accent2 = (88, 165, 27)
+
 # player square settings
-square_color = (136, 39, 255)
+square_color = (136, 37, 215)
 square_w = 50
 square_h = 50
 square_speed = 3
@@ -47,7 +57,7 @@ CONTINUE = pygame.K_RETURN
 # death wall settings
 dblock_w = 70
 dblock_h = 70
-dblock_color = (255, 107, 107)
+dblock_color = (219, 59, 59)
 
 warmup_time = 3
 

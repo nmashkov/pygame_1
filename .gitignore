@@ -1,7 +1,7 @@
 *.bak
 /media
 /logs
-docs.txt
+/fonts
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
