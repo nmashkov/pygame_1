@@ -13,6 +13,38 @@ log_file = 'events.json'
 event_log = setup_logger('event_logger', log_file)
 
 
+def get_template(template: str):
+    time = f'{dt.now()}'
+
+    temp_coop_end = {
+        'time': time,
+        'message': 'COOP_END',
+        'cooperation_time': str(variables.cooperative_time.seconds)
+    }
+    temp_conf_end = {
+        'time': time,
+        'message': 'CONFLICT_END',
+        'conflict_time': str(variables.conflict_time.seconds)
+    }
+    temp_acc_end = {
+        'time': time,
+        'message': 'ACC_END',
+        'accelerate_time': str(variables.accelerate_time.seconds)
+    }
+
+    temp_dict = {
+        'temp_coop_end': temp_coop_end,
+        'temp_conf_end': temp_conf_end,
+        'temp_acc_end': temp_acc_end
+    }
+
+    return temp_dict[template]
+
+
+def log_info(logger, template: str):
+    return logger.info(get_template(template))
+
+
 def player_events(events):
     key = pygame.key.get_pressed()
 
@@ -43,7 +75,7 @@ def player_events(events):
             variables.lp_left_time = dt.now()
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'LP_LEFT_DOWN'
                 }
             )
@@ -53,7 +85,7 @@ def player_events(events):
                     variables.start_cooperative_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'COOP_START'
                         }
                     )
@@ -66,7 +98,7 @@ def player_events(events):
                             dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
-                                'time': str(dt.now()),
+                                'time': f'{dt.now()}',
                                 'message': 'COOP_END',
                                 'cooperation_time': str(
                                     variables.cooperative_time.seconds)
@@ -77,7 +109,7 @@ def player_events(events):
                     variables.start_conflict_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'CONFLICT_START'
                         }
                     )
@@ -86,7 +118,7 @@ def player_events(events):
             variables.lp_right_time = dt.now()
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'LP_RIGHT_DOWN'
                 }
             )
@@ -96,7 +128,7 @@ def player_events(events):
                     variables.start_cooperative_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'COOP_START'
                         }
                     )
@@ -109,7 +141,7 @@ def player_events(events):
                             dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
-                                'time': str(dt.now()),
+                                'time': f'{dt.now()}',
                                 'message': 'COOP_END',
                                 'cooperation_time': str(
                                     variables.cooperative_time.seconds)
@@ -120,7 +152,7 @@ def player_events(events):
                     variables.start_conflict_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'CONFLICT_START'
                         }
                     )
@@ -129,7 +161,7 @@ def player_events(events):
             variables.lp_accelerate_time = dt.now()
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'LP_ACCELERATE_DOWN'
                 }
             )
@@ -139,7 +171,7 @@ def player_events(events):
                     variables.start_accelerate_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'ACC_START'
                         }
                     )
@@ -149,7 +181,7 @@ def player_events(events):
             variables.rp_left_time = dt.now()
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'RP_LEFT_DOWN'
                 }
             )
@@ -159,7 +191,7 @@ def player_events(events):
                     variables.start_cooperative_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'COOP_START'
                         }
                     )
@@ -172,7 +204,7 @@ def player_events(events):
                             dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
-                                'time': str(dt.now()),
+                                'time': f'{dt.now()}',
                                 'message': 'COOP_END',
                                 'cooperation_time': str(
                                     variables.cooperative_time.seconds)
@@ -183,7 +215,7 @@ def player_events(events):
                     variables.start_conflict_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'CONFLICT_START'
                         }
                     )
@@ -192,7 +224,7 @@ def player_events(events):
             variables.rp_right_time = dt.now()
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'RP_RIGHT_DOWN'
                 }
             )
@@ -202,7 +234,7 @@ def player_events(events):
                     variables.start_cooperative_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'COOP_START'
                         }
                     )
@@ -215,7 +247,7 @@ def player_events(events):
                             dt.now() - variables.start_cooperative_time)
                         player_log.info(
                             {
-                                'time': str(dt.now()),
+                                'time': f'{dt.now()}',
                                 'message': 'COOP_END',
                                 'cooperation_time': str(
                                     variables.cooperative_time.seconds)
@@ -226,7 +258,7 @@ def player_events(events):
                     variables.start_conflict_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'CONFLICT_START'
                         }
                     )
@@ -235,7 +267,7 @@ def player_events(events):
             variables.rp_accelerate_time = dt.now()
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'RP_ACCELERATE_DOWN'
                 }
             )
@@ -245,7 +277,7 @@ def player_events(events):
                     variables.start_accelerate_time = dt.now()
                     player_log.info(
                         {
-                            'time': str(dt.now()),
+                            'time': f'{dt.now()}',
                             'message': 'ACC_START'
                         }
                     )
@@ -257,7 +289,7 @@ def player_events(events):
             variables.lp_active_time += new_date
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'LP_LEFT_UP',
                     'time_pushed': str(new_date)
                 }
@@ -267,33 +299,19 @@ def player_events(events):
                     variables.coop_started = False
                     variables.cooperative_time += (
                         dt.now() - variables.start_cooperative_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'COOP_END',
-                            'cooperation_time': str(
-                                variables.cooperative_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_coop_end')
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
                     variables.conflict_time += (
                         dt.now() - variables.start_conflict_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'CONFLICT_END',
-                            'conflict_time': str(
-                                variables.conflict_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_conf_end')
         if events.key == settings.RIGHT_1:
             new_date = dt.now() - variables.lp_right_time
             variables.lp_active_time += new_date
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'LP_RIGHT_UP',
                     'time_pushed': str(new_date)
                 }
@@ -303,33 +321,19 @@ def player_events(events):
                     variables.coop_started = False
                     variables.cooperative_time += (
                         dt.now() - variables.start_cooperative_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'COOP_END',
-                            'cooperation_time': str(
-                                variables.cooperative_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_coop_end')
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
                     variables.conflict_time += (
                         dt.now() - variables.start_conflict_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'CONFLICT_END',
-                            'conflict_time': str(
-                                variables.conflict_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_conf_end')
         if events.key == settings.ACCELERATE_1:
             new_date = dt.now() - variables.lp_accelerate_time
             variables.lp_active_acc_time += new_date
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'LP_ACCELERATE_UP',
                     'time_pushed': str(new_date)
                 }
@@ -339,21 +343,14 @@ def player_events(events):
                     variables.accelerate_started = False
                     variables.accelerate_time += (
                         dt.now() - variables.start_accelerate_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'ACC_END',
-                            'accelerate_time': str(
-                                variables.accelerate_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_acc_end')
         # RP
         if events.key == settings.LEFT_2:
             new_date = dt.now() - variables.rp_left_time
             variables.rp_active_time += new_date
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'RP_LEFT_UP',
                     'time_pushed': str(new_date)
                 }
@@ -363,33 +360,19 @@ def player_events(events):
                     variables.coop_started = False
                     variables.cooperative_time += (
                         dt.now() - variables.start_cooperative_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'COOP_END',
-                            'cooperation_time': str(
-                                variables.cooperative_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_coop_end')
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
                     variables.conflict_time += (
                         dt.now() - variables.start_conflict_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'CONFLICT_END',
-                            'conflict_time': str(
-                                variables.conflict_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_conf_end')
         if events.key == settings.RIGHT_2:
             new_date = dt.now() - variables.rp_right_time
             variables.rp_active_time += new_date
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'RP_RIGHT_UP',
                     'time_pushed': str(new_date)
                 }
@@ -399,33 +382,19 @@ def player_events(events):
                     variables.coop_started = False
                     variables.cooperative_time += (
                         dt.now() - variables.start_cooperative_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'COOP_END',
-                            'cooperation_time': str(
-                                variables.cooperative_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_coop_end')
             if variables.conflict_started:
                 if not variables.conflict:
                     variables.conflict_started = False
                     variables.conflict_time += (
                         dt.now() - variables.start_conflict_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'CONFLICT_END',
-                            'conflict_time': str(
-                                variables.conflict_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_conf_end')
         if events.key == settings.ACCELERATE_2:
             new_date = dt.now() - variables.rp_accelerate_time
             variables.rp_active_acc_time += new_date
             player_log.info(
                 {
-                    'time': str(dt.now()),
+                    'time': f'{dt.now()}',
                     'message': 'RP_ACCELERATE_UP',
                     'time_pushed': str(new_date)
                 }
@@ -435,14 +404,7 @@ def player_events(events):
                     variables.accelerate_started = False
                     variables.accelerate_time += (
                         dt.now() - variables.start_accelerate_time)
-                    player_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'ACC_END',
-                            'accelerate_time': str(
-                                variables.accelerate_time.seconds)
-                        }
-                    )
+                    log_info(player_log, 'temp_acc_end')
 
 
 def event_handler():

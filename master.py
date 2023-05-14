@@ -92,7 +92,7 @@ class App:
                 self.font.render(f'{seconds:.2f}', True, 'black'),
                 (settings.WIDTH // 2 - 30, settings.HEIGHT // 2))
 
-            if seconds >= settings.warmup_time:
+            if seconds <= 0.03:
                 break
 
             pygame.display.update()

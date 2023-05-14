@@ -170,13 +170,17 @@ class Dwall:
                     self.player.health -= 1
                     # LOGS
                     print(f'Death. Remains {self.player.health} attempts')
+                    if variables.accelerate:
+                        dw_speed = variables.dwall_speed / 2
+                    else:
+                        dw_speed = variables.dwall_speed
                     dwall_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'death',
                             'health': self.player.health,
                             'player_pos': self.player.square.x,
-                            'max_dwall_speed': variables.dwall_speed,
+                            'max_dwall_speed': dw_speed,
                             'difficulty': variables.dwall_difficulty
                         }
                     )
@@ -190,13 +194,17 @@ class Dwall:
                     variables.score = self.player.score
                     # LOGS
                     print('Game over')
+                    if variables.accelerate:
+                        dw_speed = variables.dwall_speed / 2
+                    else:
+                        dw_speed = variables.dwall_speed
                     dwall_log.info(
                         {
                             'time': str(dt.now()),
                             'message': 'game_over',
                             'score': variables.score,
                             'player_pos': self.player.square.x,
-                            'max_dwall_speed': variables.dwall_speed,
+                            'max_dwall_speed': dw_speed,
                             'difficulty': variables.dwall_difficulty
                         }
                     )
