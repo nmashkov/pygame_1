@@ -151,7 +151,7 @@ def ui_result(screen):
         title2.render('Результаты зачёта:', True, dark_grey),
         (left, top))
     screen.blit(
-        base2.render(f'Общее время тренировки - {variables.stage_time}',
+        base2.render(f'Общее время зачёта - {variables.stage_time}',
                      True, dark_grey),
         (left, top*3))
     if variables.active_p == 'LEFT_P':

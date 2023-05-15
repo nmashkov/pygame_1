@@ -45,6 +45,45 @@ def log_info(logger, template: str):
     return logger.info(get_template(template))
 
 
+def print_results(stage):
+    if variables.active_p == 'LEFT_P':
+        player_p = 'ЛИ'
+    else:
+        player_p = 'ПИ'
+    if variables.active_kpush_p == 'LEFT_P':
+        player_kp = 'ЛИ'
+    else:
+        player_kp = 'ПИ'
+    if variables.active_acc_p == 'LEFT_P':
+        player_ap = 'ЛИ'
+    else:
+        player_ap = 'ПИ'
+    if stage == 'PRE_EXAM':
+        stage_name = 'Результаты тренировки:'
+        stage_name_2 = 'тренировки'
+    elif stage == 'RESULT':
+        stage_name = 'Результаты зачёта:'
+        stage_name_2 = 'зачёта'
+    results_dict = [
+        '',
+        '---------------------------------------',
+        f'{stage_name}',
+        f'Количество очков - {variables.score}',
+        f'Общее время {stage_name_2} - {variables.stage_time}',
+        f'Самый активный игрок (по времени) - {player_p}',
+        f'Самый активный игрок (по нажатиям) - {player_kp}',
+        f'Больше всего ускорений - {player_ap}',
+        f'Общее время кооперации - {variables.cooperative_time}',
+        f'Общее время конфликта - {variables.conflict_time}',
+        f'Общее время ускорения - {variables.accelerate_time}'
+    ]
+    results_file = 'results.txt'
+    dir = (f'{settings.BASE_DIR}/{settings.BASE_LOGS_DIR}/'
+           f'{settings.SESSION_DIR}/{results_file}')
+    with open(dir, 'a') as f:
+        f.write('\n'.join(results_dict))
+
+
 def player_events(events):
     key = pygame.key.get_pressed()
 
@@ -480,6 +519,7 @@ def event_handler():
                     'dwall_amount': variables.dwall_amount
                 }
             )
+            print_results('RESULT')
         # STOP STAGE
         elif events.type == settings.STOP_STAGE:
             # stop pl pos logs
@@ -612,6 +652,7 @@ def event_handler():
                     'dwall_amount': variables.dwall_amount
                 }
             )
+            print_results('PRE_EXAM')
             player_pos_log.info(
                 {
                     'time': f'{dt.now()}',
