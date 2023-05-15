@@ -95,9 +95,11 @@ class App:
             seconds = (settings.warmup_time -
                        (pygame.time.get_ticks() - start_ticks) * 0.001)
 
-            self.screen.blit(
-                base2.render(f'{seconds:.2f}', True, settings.dark_grey),
-                (settings.WIDTH // 2 - 30, settings.HEIGHT // 2))
+            draw_sec = base2.render(f'{seconds:.2f}', True, settings.dark_grey)
+            draw_sec_width = draw_sec.get_width()
+            self.screen.blit(draw_sec,
+                             (settings.WIDTH // 2 - draw_sec_width * .5,
+                              settings.HEIGHT // 2))
 
             if seconds <= 0.03:
                 break

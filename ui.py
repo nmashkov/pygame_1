@@ -6,7 +6,7 @@ import variables
 from fonts import (title1, title2, base2)
 
 
-def ui_menu(screen):
+def ui_menu(screen: pygame.Surface):
     top = 30
     left = 30
     screen.blit(
@@ -73,13 +73,13 @@ def ui_game(screen, player):
     three = settings.WIDTH // 3
     screen.blit(
         base2.render(f'Осталось: {variables.dwall_amount}', True, dark_grey),
-        (three - three * .7, 5))
+        (three * .5 - 65, 5))
     screen.blit(
         base2.render(f'Попытки: {player.health}', True, dark_grey),
-        (three * 2 - three * .7, 5))
+        (settings.WIDTH // 2 - 56, 5))
     screen.blit(
         base2.render(f'Очки: {player.score}', True, dark_grey),
-        (settings.WIDTH - three * .7, 5))
+        (settings.WIDTH - three * .5 - 37, 5))
 
 
 def ui_pre_exam(screen):
