@@ -20,6 +20,7 @@ dwall_difficulty = settings.difficulty
 dwall_changed = False
 
 is_warmuped = False
+debug_activated = False
 
 start_stage_time = dt.now()
 stage_time = td()

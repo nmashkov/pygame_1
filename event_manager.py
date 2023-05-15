@@ -677,6 +677,13 @@ def event_handler():
             )
             pygame.quit()
             sys.exit()
+        # ACTIVATE DEBUG PANEL
+        if events.type == pygame.KEYDOWN:
+            if events.key == pygame.K_8:
+                if not variables.debug_activated:
+                    variables.debug_activated = True
+                else:
+                    variables.debug_activated = False
 
         if variables.SESSION_STAGE in ('START_TRAIN', 'START_EXAM'):
             player_events(events)

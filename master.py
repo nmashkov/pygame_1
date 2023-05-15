@@ -16,7 +16,7 @@ from dwall import Dwall
 from event_manager import event_handler
 from fonts import base2
 import ui
-# from debug import debug
+from debug import debug
 # debug(info, pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
 
 
@@ -46,9 +46,14 @@ class App:
             pygame.display.set_caption(f'{self.app_name}. '
                                        f'FPS: {current_fps:.2f}')
 
+    def debug_panel(self):
+        debug(variables.accelerate, 'accelerate')
+
     def update(self, delta_t):
         self.player.update(delta_t)
         self.dwall.update(delta_t)
+        if variables.debug_activated:
+            self.debug_panel()
 
     def draw(self):
         self.player.draw()
@@ -145,6 +150,9 @@ class App:
 
             ui.ui_pre_exam(self.screen)
 
+            if variables.debug_activated:
+                self.debug_panel()
+
             pygame.display.update()
 
             self.app_caption()
@@ -167,6 +175,9 @@ class App:
                 in_result = False
 
             ui.ui_result(self.screen)
+
+            if variables.debug_activated:
+                self.debug_panel()
 
             pygame.display.update()
 

@@ -54,10 +54,7 @@ class Player:
     def update(self, delta_t=1/60):
         # player controls
         key = pygame.key.get_pressed()
-        if variables.SESSION_STAGE not in ('START_MENU',
-                                           'PRE_EXAM',
-                                           'STOP_STAGE',
-                                           'RESULT'):
+        if variables.SESSION_STAGE in ('START_TRAIN', 'START_EXAM'):
             # move left
             # LP
             if key[self.left_button_1] and self.square.left > 5:
