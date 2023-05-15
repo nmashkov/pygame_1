@@ -82,6 +82,6 @@ exam_difficulty = 5  # 2 < d < 6 = 3, 4, 5
 # exam difficulty step values
 ex_dw_sp_step = 0.5
 ex_dw_am_sp = 5
-ex_dw_am_dif_1 = 40
-ex_dw_am_dif_2 = 25
+ex_dw_am_dif_1 = 35
+ex_dw_am_dif_2 = 20
 ex_dw_dif_step = 1

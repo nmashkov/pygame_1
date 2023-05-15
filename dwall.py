@@ -83,7 +83,7 @@ class Dwall:
                     dwall_log.info(
                         {
                             'time': f'{dt.now()}',
-                            'message': 'DIFFICULTY_UP',
+                            'message': 'difficulty_up',
                             'dwall_amount': variables.dwall_amount
                         }
                     )
@@ -96,7 +96,7 @@ class Dwall:
                     dwall_log.info(
                         {
                             'time': f'{dt.now()}',
-                            'message': 'DIFFICULTY_UP',
+                            'message': 'difficulty_up',
                             'dwall_amount': variables.dwall_amount
                         }
                     )

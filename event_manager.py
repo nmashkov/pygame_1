@@ -410,154 +410,32 @@ def player_events(events):
 def event_handler():
     for events in pygame.event.get():
         # EVENTS SECTION
-        # START MENU
-        if events.type == settings.START_MENU:
-            event_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_MENU',
-                    'SESSION': f'{settings.SESSION_DIR}'
-                }
-            )
-        # START TRAIN STATE
-        if events.type == settings.START_TRAIN:
-            variables.is_warmuped = False
-            event_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_TRAIN'
-                }
-            )
-            player_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_TRAIN'
-                }
-            )
-            player_pos_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_TRAIN'
-                }
-            )
-            dwall_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_TRAIN'
-                }
-            )
-        # PRE EXAM STATE
-        if events.type == settings.PRE_EXAM:
-            event_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'PRE_EXAM'
-                }
-            )
-            if variables.lp_active_time >= variables.rp_active_time:
-                variables.active_p = 'LEFT_P'
-            else:
-                variables.active_p = 'RIGHT_P'
-            if variables.lp_active_acc_time >= variables.rp_active_acc_time:
-                variables.active_acc_p = 'LEFT_P'
-            else:
-                variables.active_acc_p = 'RIGHT_P'
-            if variables.lp_key_pushes >= variables.rp_key_pushes:
-                variables.active_kpush_p = 'LEFT_P'
-            else:
-                variables.active_kpush_p = 'RIGHT_P'
-            if variables.accelerate:
-                variables.dwall_speed *= .5
-            player_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'PRE_EXAM',
-                    'score': variables.score,
-                    'stage_time': f'{variables.stage_time}',
-                    'active_p': variables.active_p,
-                    'lp_act_t': f'{variables.lp_active_time}',
-                    'rp_act_t': f'{variables.rp_active_time}',
-                    'active_acc_p': variables.active_acc_p,
-                    'lp_acc_t': f'{variables.lp_active_acc_time}',
-                    'rp_acc_t': f'{variables.rp_active_acc_time}',
-                    'active_kpush_p': variables.active_kpush_p,
-                    'lp_kpush': variables.lp_key_pushes,
-                    'rp_kpush': variables.rp_key_pushes,
-                    'coop_time': f'{variables.cooperative_time}',
-                    'conflict_time': f'{variables.conflict_time}',
-                    'max_dwall_speed': variables.dwall_speed,
-                    'end_difficulty': variables.dwall_difficulty,
-                    'dwall_amount': variables.dwall_amount
-                }
-            )
-            player_pos_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'PRE_EXAM'
-                }
-            )
-        # START EXAM SESSION
-        if events.type == settings.START_EXAM:
-            # RESET VARIABLES
-            variables.is_warmuped = False
-            variables.lp_active_time = td()
-            variables.rp_active_time = td()
-            variables.lp_active_acc_time = td()
-            variables.rp_active_acc_time = td()
-            variables.lp_key_pushes = 0
-            variables.rp_key_pushes = 0
-            variables.cooperative_time = td()
-            variables.conflict_time = td()
-            # PREPARE EXAM
-            variables.dwall_speed = settings.exam_dwall_speed
-            variables.acc_dwall_speed = variables.dwall_speed * 2
-            variables.dwall_amount = settings.exam_dwall_amount
-            variables.dwall_difficulty = settings.exam_difficulty
-            variables.score = 0
-            event_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_EXAM'
-                }
-            )
-            player_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_EXAM'
-                }
-            )
-            player_pos_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'START_EXAM'
-                }
-            )
-        # STOP STAGE
-        if events.type == settings.STOP_STAGE:
-            pygame.time.set_timer(settings.PLAYER_POS, 0)
-            variables.pl_pos_log = False
-            variables.stage_time = dt.now() - variables.start_stage_time
-            event_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'STOP_STAGE',
-                    'stage_time': f'{variables.stage_time}'
-                }
-            )
-            player_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'STOP_STAGE',
-                    'stage_time': f'{variables.stage_time}'
-                }
-            )
-            player_pos_log.info(
-                {
-                    'time': f'{dt.now()}',
-                    'message': 'STOP_STAGE',
-                    'stage_time': f'{variables.stage_time}'
-                }
-            )
+        # PLAYER POS LOGS
+        if events.type == settings.PLAYER_POS:
+            variables.pl_pos_log = True
+        # DWALL CHANGE DIFFICULTY
+        if events.type == settings.DWALL_DIFF:
+            if variables.SESSION_STAGE == 'START_TRAIN':
+                if variables.accelerate:
+                    variables.dwall_speed = ((variables.dwall_speed / 2) +
+                                             settings.dw_sp_step)
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                else:
+                    variables.dwall_speed += settings.dw_sp_step
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                variables.dwall_changed = True
+            elif variables.SESSION_STAGE == 'START_EXAM':
+                if variables.accelerate:
+                    variables.dwall_speed = ((variables.dwall_speed / 2) +
+                                             settings.ex_dw_sp_step)
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                else:
+                    variables.dwall_speed += settings.ex_dw_sp_step
+                    variables.acc_dwall_speed = variables.dwall_speed * 2
+                variables.dwall_changed = True
+                if variables.dwall_amount in (settings.ex_dw_am_dif_1,
+                                              settings.ex_dw_am_dif_2):
+                    variables.dwall_difficulty -= settings.ex_dw_dif_step
         # RESULT
         if events.type == settings.RESULT:
             event_log.info(
@@ -602,9 +480,192 @@ def event_handler():
                     'dwall_amount': variables.dwall_amount
                 }
             )
-        # RESULT
-        if events.type == settings.PLAYER_POS:
-            variables.pl_pos_log = True
+        # STOP STAGE
+        elif events.type == settings.STOP_STAGE:
+            # stop pl pos logs
+            pygame.time.set_timer(settings.PLAYER_POS, 0)
+            variables.pl_pos_log = False
+            # check coop, conflict and acc stopping
+            if variables.coop_started:
+                variables.coop_started = False
+                variables.cooperative_time += (
+                    dt.now() - variables.start_cooperative_time)
+                log_info(player_log, 'temp_coop_end')
+            if variables.conflict_started:
+                variables.conflict_started = False
+                variables.conflict_time += (
+                    dt.now() - variables.start_conflict_time)
+                log_info(player_log, 'temp_conf_end')
+            if variables.accelerate_started:
+                variables.accelerate_started = False
+                variables.accelerate_time += (
+                    dt.now() - variables.start_accelerate_time)
+                log_info(player_log, 'temp_acc_end')
+            # logs
+            variables.stage_time = dt.now() - variables.start_stage_time
+            event_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'STOP_STAGE',
+                    'stage_time': f'{variables.stage_time}'
+                }
+            )
+            player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'STOP_STAGE',
+                    'stage_time': f'{variables.stage_time}'
+                }
+            )
+            player_pos_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'STOP_STAGE',
+                    'stage_time': f'{variables.stage_time}'
+                }
+            )
+            dwall_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'STOP_STAGE',
+                    'stage_time': f'{variables.stage_time}'
+                }
+            )
+        # START EXAM SESSION
+        elif events.type == settings.START_EXAM:
+            # RESET VARIABLES
+            variables.is_warmuped = False
+            variables.lp_active_time = td()
+            variables.rp_active_time = td()
+            variables.lp_active_acc_time = td()
+            variables.rp_active_acc_time = td()
+            variables.lp_key_pushes = 0
+            variables.rp_key_pushes = 0
+            variables.cooperative_time = td()
+            variables.conflict_time = td()
+            variables.accelerate_time = td()
+            # PREPARE EXAM
+            variables.dwall_speed = settings.exam_dwall_speed
+            variables.acc_dwall_speed = variables.dwall_speed * 2
+            variables.dwall_amount = settings.exam_dwall_amount
+            variables.dwall_difficulty = settings.exam_difficulty
+            variables.score = 0
+            event_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_EXAM'
+                }
+            )
+            player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_EXAM'
+                }
+            )
+            player_pos_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_EXAM'
+                }
+            )
+            dwall_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_EXAM'
+                }
+            )
+        # PRE EXAM STATE
+        elif events.type == settings.PRE_EXAM:
+            if variables.lp_active_time >= variables.rp_active_time:
+                variables.active_p = 'LEFT_P'
+            else:
+                variables.active_p = 'RIGHT_P'
+            if variables.lp_active_acc_time >= variables.rp_active_acc_time:
+                variables.active_acc_p = 'LEFT_P'
+            else:
+                variables.active_acc_p = 'RIGHT_P'
+            if variables.lp_key_pushes >= variables.rp_key_pushes:
+                variables.active_kpush_p = 'LEFT_P'
+            else:
+                variables.active_kpush_p = 'RIGHT_P'
+            if variables.accelerate:
+                variables.dwall_speed *= .5
+            player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'PRE_EXAM',
+                    'score': variables.score,
+                    'stage_time': f'{variables.stage_time}',
+                    'active_p': variables.active_p,
+                    'lp_act_t': f'{variables.lp_active_time}',
+                    'rp_act_t': f'{variables.rp_active_time}',
+                    'active_acc_p': variables.active_acc_p,
+                    'lp_acc_t': f'{variables.lp_active_acc_time}',
+                    'rp_acc_t': f'{variables.rp_active_acc_time}',
+                    'active_kpush_p': variables.active_kpush_p,
+                    'lp_kpush': variables.lp_key_pushes,
+                    'rp_kpush': variables.rp_key_pushes,
+                    'coop_time': f'{variables.cooperative_time}',
+                    'conflict_time': f'{variables.conflict_time}',
+                    'max_dwall_speed': variables.dwall_speed,
+                    'end_difficulty': variables.dwall_difficulty,
+                    'dwall_amount': variables.dwall_amount
+                }
+            )
+            player_pos_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'PRE_EXAM'
+                }
+            )
+            event_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'PRE_EXAM'
+                }
+            )
+            dwall_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'PRE_EXAM'
+                }
+            )
+        # START TRAIN STATE
+        elif events.type == settings.START_TRAIN:
+            variables.is_warmuped = False
+            event_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_TRAIN'
+                }
+            )
+            player_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_TRAIN'
+                }
+            )
+            player_pos_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_TRAIN'
+                }
+            )
+            dwall_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_TRAIN'
+                }
+            )
+        # START MENU
+        elif events.type == settings.START_MENU:
+            event_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'START_MENU',
+                    'SESSION': f'{settings.SESSION_DIR}'
+                }
+            )
         # QUIT APP
         if events.type == pygame.QUIT:
             event_log.info(
@@ -616,29 +677,6 @@ def event_handler():
             )
             pygame.quit()
             sys.exit()
-        # DWALL CHANGE DIFFICULTY
-        if events.type == settings.DWALL_DIFF:
-            if variables.SESSION_STAGE == 'START_TRAIN':
-                if variables.accelerate:
-                    variables.dwall_speed = ((variables.dwall_speed / 2) +
-                                             settings.dw_sp_step)
-                    variables.acc_dwall_speed = variables.dwall_speed * 2
-                else:
-                    variables.dwall_speed += settings.dw_sp_step
-                    variables.acc_dwall_speed = variables.dwall_speed * 2
-                variables.dwall_changed = True
-            elif variables.SESSION_STAGE == 'START_EXAM':
-                if variables.accelerate:
-                    variables.dwall_speed = ((variables.dwall_speed / 2) +
-                                             settings.ex_dw_sp_step)
-                    variables.acc_dwall_speed = variables.dwall_speed * 2
-                else:
-                    variables.dwall_speed += settings.ex_dw_sp_step
-                    variables.acc_dwall_speed = variables.dwall_speed * 2
-                variables.dwall_changed = True
-                if variables.dwall_amount in (settings.ex_dw_am_dif_1,
-                                              settings.ex_dw_am_dif_2):
-                    variables.dwall_difficulty -= settings.ex_dw_dif_step
 
         if variables.SESSION_STAGE in ('START_TRAIN', 'START_EXAM'):
             player_events(events)
