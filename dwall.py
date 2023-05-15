@@ -191,6 +191,8 @@ class Dwall:
                 else:
                     self.player.health -= 1
                     self.dwall = []
+                    self.player.square.left = (self.app.res[0] // 2
+                                               - self.player.square_w // 2)
                     variables.score = self.player.score
                     # LOGS
                     print('Game over')

@@ -89,6 +89,9 @@ class App:
         while True:
             self.screen.fill(self.bg_color)
 
+            self.player.draw()
+            ui.ui_game(self.screen, self.player)
+
             seconds = (settings.warmup_time -
                        (pygame.time.get_ticks() - start_ticks) * 0.001)
 
@@ -108,7 +111,7 @@ class App:
         variables.pl_pos_log = True
         pygame.time.set_timer(settings.PLAYER_POS, settings.PLPOSLOG_TIMER)
 
-    def train(self, delta_t):
+    def game(self, delta_t):
 
         self.screen.fill(self.bg_color)
 
@@ -143,18 +146,6 @@ class App:
             pygame.display.update()
 
             self.app_caption()
-
-    def exam(self, delta_t):
-
-        self.screen.fill(self.bg_color)
-
-        if not variables.is_warmuped:
-            self.warmup()
-
-        self.update(delta_t)
-        self.draw()
-
-        self.app_caption('game')
 
     def result(self):
         pygame.event.post(pygame.event.Event(settings.RESULT))
@@ -195,14 +186,14 @@ class App:
                 break
 
             if variables.SESSION_STAGE == 'START_EXAM':
-                self.exam(delta_t)
+                self.game(delta_t)
                 self.player.log_player_pos()
 
             if variables.SESSION_STAGE == 'PRE_EXAM':
                 self.pre_exam()
 
             if variables.SESSION_STAGE == 'START_TRAIN':
-                self.train(delta_t)
+                self.game(delta_t)
                 self.player.log_player_pos()
 
         self.result()

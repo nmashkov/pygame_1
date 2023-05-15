@@ -7,8 +7,6 @@ from fonts import (title1, title2, base2)
 
 
 def ui_menu(screen):
-    # back = pygame.Rect(25, 25, settings.WIDTH - 50, settings.HEIGHT - 50)
-    # pygame.draw.rect(screen, (200, 200, 200), back)
     top = 30
     left = 30
     screen.blit(
@@ -32,11 +30,11 @@ def ui_menu(screen):
         title2.render('Правый игрок (ПИ):', True, dark_grey),
         (left, top*8))
     screen.blit(
-        base2.render('Стрелки < и > - движение влево и вправо',
+        base2.render('LEFT и RIGHT - движение влево и вправо',
                      True, dark_grey),
         (left*2, top*9))
     screen.blit(
-        base2.render('V (стрелка вниз) - ускорение', True, dark_grey),
+        base2.render('DOWN - ускорение', True, dark_grey),
         (left*2, top*10))
     #
     screen.blit(
@@ -47,7 +45,7 @@ def ui_menu(screen):
                      True, dark_grey),
         (left, top*14))
     screen.blit(
-        base2.render('и стрелку вверх (^)', True, dark_grey),
+        base2.render('и стрелку вверх (UP)', True, dark_grey),
         (left, top*15))
     # dwall
     screen.blit(
@@ -127,19 +125,23 @@ def ui_pre_exam(screen):
                      True, dark_grey),
         (left, top*8))
     screen.blit(
-        base2.render(f'Количество очков - {variables.score}',
+        base2.render(f'Общее время ускорения - {variables.accelerate_time}',
                      True, dark_grey),
         (left, top*9))
     screen.blit(
+        base2.render(f'Количество очков - {variables.score}',
+                     True, dark_grey),
+        (left, top*10))
+    screen.blit(
         title2.render('Второй этап: Зачёт.', True, dark_grey),
-        (left, top*12))
+        (left, top*13))
     screen.blit(
         base2.render('Чтобы начать, одновременно удерживайте W',
                      True, dark_grey),
-        (left, top*14))
-    screen.blit(
-        base2.render('и стрелку вверх (^)', True, dark_grey),
         (left, top*15))
+    screen.blit(
+        base2.render('и стрелку вверх (UP)', True, dark_grey),
+        (left, top*16))
 
 
 def ui_result(screen):
@@ -185,6 +187,10 @@ def ui_result(screen):
                      True, dark_grey),
         (left, top*8))
     screen.blit(
-        base2.render(f'Количество очков - {variables.score}',
+        base2.render(f'Общее время ускорения - {variables.accelerate_time}',
                      True, dark_grey),
         (left, top*9))
+    screen.blit(
+        base2.render(f'Количество очков - {variables.score}',
+                     True, dark_grey),
+        (left, top*10))
