@@ -47,7 +47,20 @@ class App:
                                        f'FPS: {current_fps:.2f}')
 
     def debug_panel(self):
-        debug(variables.accelerate, 'accelerate')
+        debug(variables.dwall_speed, 'dwall_speed')
+        debug(variables.dwall_difficulty, 'dwall_difficulty', 70)
+        debug(variables.lp_active_time, 'lp_active_time', 90)
+        debug(variables.lp_active_acc_time, 'lp_active_acc_time', 110)
+        debug(variables.lp_key_pushes, 'lp_key_pushes', 130)
+        debug(variables.rp_active_time, 'rp_active_time', 150)
+        debug(variables.rp_active_acc_time, 'rp_active_acc_time', 170)
+        debug(variables.rp_key_pushes, 'rp_key_pushes', 190)
+        debug(variables.accelerate, 'accelerate', 210)
+        debug(variables.accelerate_time, 'accelerate_time', 230)
+        debug(variables.conflict, 'conflict', 250)
+        debug(variables.conflict_time, 'conflict_time', 270)
+        debug(variables.cooperation, 'cooperation', 290)
+        debug(variables.cooperative_time, 'cooperative_time', 310)
 
     def update(self, delta_t):
         self.player.update(delta_t)

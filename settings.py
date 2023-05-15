@@ -53,6 +53,7 @@ ACCELERATE_2 = pygame.K_DOWN
 START_2 = pygame.K_UP
 EXIT = pygame.K_ESCAPE
 CONTINUE = pygame.K_RETURN
+DEBUG = pygame.K_8
 
 # death wall settings
 dblock_w = 70
