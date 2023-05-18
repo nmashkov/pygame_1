@@ -42,7 +42,7 @@ class Player:
         pygame.draw.rect(self.app.screen, self.square_color, self.square)
 
     def log_player_pos(self):
-        if variables.pl_pos_log:
+        if variables.pl_pos_log and variables.is_warmuped:
             player_pos_log.info(
                 {
                     'time': f'{dt.now()}',

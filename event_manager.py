@@ -729,5 +729,6 @@ def event_handler():
                 if events.key == settings.EXIT:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
-        if variables.SESSION_STAGE in ('START_TRAIN', 'START_EXAM'):
+        if (variables.SESSION_STAGE in ('START_TRAIN', 'START_EXAM') and
+                variables.is_warmuped):
             player_events(events)
