@@ -718,13 +718,16 @@ def event_handler():
             )
             pygame.quit()
             sys.exit()
-        # ACTIVATE DEBUG PANEL
+        # ACTIVATE DEBUG PANEL AND EXIT
         if events.type == pygame.KEYDOWN:
-            if events.key == settings.DEBUG and events.mod == pygame.KMOD_LALT:
-                if not variables.debug_activated:
-                    variables.debug_activated = True
-                else:
-                    variables.debug_activated = False
+            if events.mod == pygame.KMOD_LALT:
+                if events.key == settings.DEBUG:
+                    if not variables.debug_activated:
+                        variables.debug_activated = True
+                    else:
+                        variables.debug_activated = False
+                if events.key == settings.EXIT:
+                    pygame.event.post(pygame.event.Event(pygame.QUIT))
 
         if variables.SESSION_STAGE in ('START_TRAIN', 'START_EXAM'):
             player_events(events)

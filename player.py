@@ -76,7 +76,3 @@ class Player:
                 variables.dwall_speed = variables.acc_dwall_speed
             else:
                 variables.dwall_speed = variables.acc_dwall_speed / 2
-
-        # exit app
-        if key[self.exit_button]:
-            pygame.event.post(self.app.quit_event)

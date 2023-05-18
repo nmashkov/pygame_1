@@ -51,7 +51,7 @@ LEFT_2 = pygame.K_LEFT
 RIGHT_2 = pygame.K_RIGHT
 ACCELERATE_2 = pygame.K_DOWN
 START_2 = pygame.K_UP
-EXIT = pygame.K_ESCAPE
+EXIT = pygame.K_9
 CONTINUE = pygame.K_RETURN
 DEBUG = pygame.K_8
 
