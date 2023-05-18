@@ -55,34 +55,45 @@ EXIT = pygame.K_9
 CONTINUE = pygame.K_RETURN
 DEBUG = pygame.K_8
 
+# warmup
+warmup_time = 3
+
 # death wall settings
 dblock_w = 70
 dblock_h = 70
 dblock_color = (219, 59, 59)
 
-warmup_time = 3
+# diffuculty levels
+DIFF = {
+    5: (3, 5),
+    4: (3, 4),
+    3: (2, 3),
+    2: (2, 2),
+    1: (1, 1)
+}
 
 # train player and stats settings
-dwall_speed = 4
+dwall_speed = 5
 dwall_amount = 30
 health = 3
 score = 0
-difficulty = 5  # 2 < d < 6 = 3, 4, 5
+difficulty = 5
 
 # train difficulty step values
 dw_sp_step = 0.5
 dw_am_sp = 5
+dw_am_dif = 10
+dw_dif_step = 1
 
 # exam player and stats settings
 exam_dwall_speed = 5
-exam_dwall_amount = 50
+exam_dwall_amount = 60
 exam_health = 3
 exam_score = 0
-exam_difficulty = 5  # 2 < d < 6 = 3, 4, 5
+exam_difficulty = 4
 
 # exam difficulty step values
 ex_dw_sp_step = 0.5
 ex_dw_am_sp = 5
-ex_dw_am_dif_1 = 35
-ex_dw_am_dif_2 = 20
+ex_dw_am_dif = (50, 30, 10)
 ex_dw_dif_step = 1

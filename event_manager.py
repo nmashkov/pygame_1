@@ -463,6 +463,9 @@ def event_handler():
                     variables.dwall_speed += settings.dw_sp_step
                     variables.acc_dwall_speed = variables.dwall_speed * 2
                 variables.dwall_changed = True
+                if (variables.dwall_amount % settings.dw_am_dif == 0
+                        and variables.dwall_difficulty > 1):
+                    variables.dwall_difficulty -= settings.dw_dif_step
             elif variables.SESSION_STAGE == 'START_EXAM':
                 if variables.accelerate:
                     variables.dwall_speed = ((variables.dwall_speed / 2) +
@@ -472,8 +475,8 @@ def event_handler():
                     variables.dwall_speed += settings.ex_dw_sp_step
                     variables.acc_dwall_speed = variables.dwall_speed * 2
                 variables.dwall_changed = True
-                if variables.dwall_amount in (settings.ex_dw_am_dif_1,
-                                              settings.ex_dw_am_dif_2):
+                if (variables.dwall_amount in settings.ex_dw_am_dif
+                        and variables.dwall_difficulty > 1):
                     variables.dwall_difficulty -= settings.ex_dw_dif_step
         # RESULT
         if events.type == settings.RESULT:

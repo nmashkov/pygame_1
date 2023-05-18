@@ -237,8 +237,8 @@ def ui_pre_exam(screen):
     #
     screen.blit(base2.render('Препятствий', True, dark_grey),  # 128
                 (settings.WIDTH - left - (128 + 188)*.5, top*14))
-    screen.blit(base.render('50', True, dark_grey),  # 20
-                (settings.WIDTH - left - (20 + 188)*.5, top*15))
+    t = base.render(f'{settings.exam_dwall_amount}', True, dark_grey)
+    screen.blit(t, (settings.WIDTH - left - (t.get_width() + 188)*.5, top*15))
     #
     button = pygame.Rect(center-263, top*18-10, 526, 40)
     pygame.draw.rect(screen, accent, button)

@@ -1,8 +1,9 @@
 import pygame
-from random import randrange as rnd
+from random import randrange as rnd, choice
 from datetime import datetime as dt
 
 import settings
+from settings import DIFF
 import variables
 from logger import setup_logger
 
@@ -12,41 +13,136 @@ dwall_log = setup_logger('dwall_logger', log_file)
 
 
 def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
-    done = False
-    while not done:
-        dwall_list = [i*rnd(0, 2) for i in range(11)]
-
-        for i in range(1, len(dwall_list_previous)):
-            if not dwall_list_previous[i]:
-                dwall_list[i] = i
-
-        if dwall_list == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
-            dwall_list = [0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-        if dwall_list == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
-            dwall_list = [0, 1, 0, 3, 4, 5, 6, 7, 8, 0, 10]
-
-        counter = 0
-        for i in dwall_list:
-            if not i:
-                counter += 1
-        if counter < difficulty:
-            done = True
+    # 1
+    new_dwall_list = [0]*11
+    zero_list = []
+    for i in range(1, len(dwall_list_previous)):
+        if not dwall_list_previous[i]:
+            new_dwall_list[i] = i
+        else:
+            new_dwall_list[i] = 0
+            zero_list.append(i)
+    # 2
+    max_counter = DIFF[difficulty][1]
+    min_counter = DIFF[difficulty][0]
+    # 3
+    counter = rnd(min_counter, max_counter+1, 1)
+    # 4
+    if difficulty in (3, 4, 5):
+        twin = 1
+    else:
+        if counter >= 2:
+            twin = choice([0, 1])
+        else:
+            twin = 0
+    # 5
+    vacant = len(zero_list)
+    if vacant >= counter:
+        y_input = True
+        if counter > 1 and twin > 0:
+            pairs = []
+            for i in range(vacant-1):
+                if zero_list[i] + 1 == zero_list[i+1]:
+                    pairs.append((zero_list[i], zero_list[i+1]))
+        if twin:
+            if pairs:
+                x, y = choice(pairs)
+                zero_list.remove(x)
+                zero_list.remove(y)
+                counter -= 2
+            else:
+                x = choice(zero_list)
+                if x + 1 >= 11:
+                    y = x - 1
+                else:
+                    y = x + 1
+                y_input = False
+                zero_list.remove(x)
+                counter -= 2
+            if counter > 0:
+                while counter:
+                    x = choice(zero_list)
+                    zero_list.remove(x)
+                    counter -= 1
+        else:
+            while counter:
+                x = choice(zero_list)
+                zero_list.remove(x)
+                counter -= 1
+        for i in zero_list:
+            new_dwall_list[i] = i
+            if not y_input:
+                new_dwall_list[y] = 0
+                y_input = True
+    elif vacant < counter:
+        y_input = True
+        if vacant == 1:
+            if twin:
+                x = choice(zero_list)
+                if x + 1 >= 11:
+                    y = x - 1
+                else:
+                    y = x + 1
+                y_input = False
+                zero_list.remove(x)
+                counter -= 2
+            else:
+                while counter:
+                    x = choice(new_dwall_list)
+                    zero_list.remove(x)
+                    counter -= 1
+        else:
+            if counter > 1 and twin:
+                pairs = []
+                for i in range(vacant-1):
+                    if zero_list[i] + 1 == zero_list[i+1]:
+                        pairs.append((zero_list[i], zero_list[i+1]))
+            if twin:
+                if pairs:
+                    x, y = choice(pairs)
+                    zero_list.remove(x)
+                    zero_list.remove(y)
+                    counter -= 2
+                    if counter > 0:
+                        while counter:
+                            x = choice(new_dwall_list)
+                            zero_list.remove(x)
+                            counter -= 1
+                else:
+                    x = choice(zero_list)
+                    if x + 1 >= 11:
+                        y = x - 1
+                    else:
+                        y = x + 1
+                    y_input = False
+                    zero_list.remove(x)
+                    counter -= 2
+            else:
+                while counter:
+                    x = choice(new_dwall_list)
+                    zero_list.remove(x)
+                    counter -= 1
+        for i in zero_list:
+            new_dwall_list[i] = i
+            if not y_input:
+                new_dwall_list[y] = 0
+                y_input = True
 
     # LOGS
-    print(dwall_list)
+    print(new_dwall_list)
     dwall_log.info(
             {
                 'time': str(dt.now()),
                 'message': 'create_new_dwall',
-                'dwall_list': dwall_list
+                'dwall_list': new_dwall_list
             }
         )
 
     new_dwall = [pygame.Rect(70 * j - 70,
                              -70,
                              dblock_w,
-                             dblock_h) for j in dwall_list]
-    return new_dwall, dwall_list
+                             dblock_h) for j in new_dwall_list]
+    return new_dwall, new_dwall_list
 
 
 class Dwall:
@@ -60,7 +156,7 @@ class Dwall:
         self.dwall_speed = settings.dwall_speed
         # dwall utils
         self.dwall = []
-        self.dwall_list_previous = []
+        self.dwall_list_previous = [0, 0, 2, 0, 4, 0, 6, 0, 8, 0, 10]
         self.difficulty = settings.difficulty
         self.dwall_amount = settings.dwall_amount
 
@@ -134,6 +230,8 @@ class Dwall:
                 variables.dwall_changed = False
         else:
             variables.score = self.player.score
+            self.player.square.left = (self.app.res[0] // 2
+                                       - self.player.square_w // 2)
             self.change_state()
 
         # drawing checkline
