@@ -1,5 +1,5 @@
 """
-Game 1.
+Synergy-1
 Author: Nikita Mashkov
 Programmer: Nikita Mashkov
 Designer: Evgeny Manuylenko
@@ -78,11 +78,8 @@ class App:
         top = 30
         clicked = False
 
-        button = pygame.Rect(settings.WIDTH-top - 40, top*1, 40, 40)
-        pygame.draw.rect(self.screen, (255, 255, 255), button)
-        button_inner = pygame.Rect(settings.WIDTH-top - 38, top*1+2,
-                                   36, 36)
-        pygame.draw.rect(self.screen, settings.back1, button_inner)
+        button = pygame.Rect(settings.WIDTH-top - 38, top*1+2, 36, 36)
+        pygame.draw.rect(self.screen, settings.back1, button, border_radius=10)
         self.screen.blit(bt.render('i', True, (255, 255, 255)),  # 5
                          (settings.WIDTH-top-22, top*1+8))
 
@@ -99,11 +96,8 @@ class App:
         clicked = False
         in_credits = True
 
-        button = pygame.Rect(settings.WIDTH-top - 40, top*1, 40, 40)
-        pygame.draw.rect(self.screen, (255, 255, 255), button)
-        button_inner = pygame.Rect(settings.WIDTH-top - 38, top*1+2,
-                                   36, 36)
-        pygame.draw.rect(self.screen, settings.back1, button_inner)
+        button = pygame.Rect(settings.WIDTH-top - 38, top*1+2, 36, 36)
+        pygame.draw.rect(self.screen, settings.back1, button, border_radius=10)
         self.screen.blit(bt.render('H', True, (255, 255, 255)),  # 15
                          (settings.WIDTH-top-27, top*1+8))
 

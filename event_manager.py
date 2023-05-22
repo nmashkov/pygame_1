@@ -478,6 +478,15 @@ def event_handler():
                 if (variables.dwall_amount in settings.ex_dw_am_dif
                         and variables.dwall_difficulty > 1):
                     variables.dwall_difficulty -= settings.ex_dw_dif_step
+            dwall_log.info(
+                {
+                    'time': f'{dt.now()}',
+                    'message': 'difficulty_up',
+                    'dwall_amount': variables.dwall_amount,
+                    'dwall_speed': variables.dwall_speed,
+                    'dwall_difficulty': variables.dwall_difficulty
+                }
+            )
         # RESULT
         if events.type == settings.RESULT:
             event_log.info(
