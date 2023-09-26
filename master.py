@@ -12,7 +12,7 @@ from datetime import datetime as dt
 import settings
 import variables
 from player import Player
-from dwall import Dwall
+from dwall import DwallGroup
 from event_manager import event_handler
 from fonts import base2, button as bt
 import ui
@@ -32,8 +32,11 @@ class App:
         self.bg_color = settings.bg_color
         self.pygame_icon = pygame.image.load('media/icon.ico')
         self.quit_event = pygame.event.Event(pygame.QUIT)
+        # all sprites
+        self.all_sprites = pygame.sprite.Group()
+        # objects
         self.player = Player(self)
-        self.dwall = Dwall(self)
+        self.dwall = DwallGroup(self)
 
     def app_caption(self, mode='menu'):
         current_fps = self.clock.get_fps()
@@ -64,13 +67,12 @@ class App:
 
     def update(self, delta_t):
         self.player.update(delta_t)
-        self.dwall.update(delta_t)
+        self.dwall.update()
         if variables.debug_activated:
             self.debug_panel()
 
     def draw(self):
-        self.player.draw()
-        self.dwall.draw()
+        self.all_sprites.draw(self.screen)
         ui.ui_game(self.screen, self.player)
         pygame.display.update()
 
@@ -167,7 +169,7 @@ class App:
         while True:
             self.screen.fill(self.bg_color)
 
-            self.player.draw()
+            self.all_sprites.draw(self.screen)
             ui.ui_game(self.screen, self.player)
 
             seconds = (settings.warmup_time -

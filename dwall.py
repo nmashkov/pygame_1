@@ -12,7 +12,7 @@ log_file = 'dwall.json'
 dwall_log = setup_logger('dwall_logger', log_file)
 
 
-def generate_new_dwall(dblock_w, dblock_h, dwall_list_previous, difficulty):
+def generate_new_dwall(dwall_list_previous, difficulty):
     # 1 mark vacant places in previous dwall
     new_dwall_list = [0]*11
     zero_list = []
@@ -55,7 +55,7 @@ def generate_new_dwall(dblock_w, dblock_h, dwall_list_previous, difficulty):
                 if x + 1 >= 11:
                     y = x - 1
                 else:
-                    y = choice(x+1, x-1)
+                    y = choice([x+1, x-1])
                 y_input = False
                 zero_list.remove(x)
                 counter -= 2
@@ -83,7 +83,7 @@ def generate_new_dwall(dblock_w, dblock_h, dwall_list_previous, difficulty):
                 if x + 1 >= 11:
                     y = x - 1
                 else:
-                    y = choice(x+1, x-1)
+                    y = choice([x+1, x-1])
                 zero_list.pop()
                 y_input = False
                 counter -= 2
@@ -147,47 +147,427 @@ def generate_new_dwall(dblock_w, dblock_h, dwall_list_previous, difficulty):
                 'dwall_list': new_dwall_list
             }
         )
-
-    new_dwall = [pygame.Rect(70 * j - 70,
-                             -70,
-                             dblock_w,
-                             dblock_h) for j in new_dwall_list]
-    return new_dwall, new_dwall_list
+    return new_dwall_list
 
 
-class Dwall:
-    def __init__(self, app):
-        self.app = app
-        self.player = self.app.player
-        # dwall params
+def generate_new_dwall_alternate(dwall_list_previous, difficulty):
+    print('=alternate dwall generator=')
+    print(f'difficulty= {difficulty}')
+    # 1 mark vacant places in previous dwall
+    new_dwall_list = [0]*11
+    fill_list = []
+    zero_list = []
+    segments = []
+    k = 0
+    max_segment = [0, 0]
+    max_segments = []
+    for i in range(1, len(dwall_list_previous)):
+        if not dwall_list_previous[i]:
+            new_dwall_list[i] = i
+            if k > 0:
+                if k > max_segment[0]:
+                    max_segment[0] = k
+                    max_segment[1] = i-k
+                    max_segments = []
+                    max_segments.append((k, i-k))
+                elif k == max_segment[0]:
+                    max_segments.append((k, i-k))
+                segments.append((k, i-k))
+                k = 0
+        else:
+            k += 1
+            new_dwall_list[i] = 0
+            fill_list.append(i)
+    if k > 0:
+        if k > max_segment[0]:
+            max_segment[0] = k
+            max_segment[1] = i-k+1
+        elif k == max_segment[0]:
+            max_segments.append((k, i-k+1))
+        segments.append((k, i-k+1))
+        k = 0
+    print(f'prev_dwall_list= {dwall_list_previous}')
+    print(f'new_dwall_list= {new_dwall_list}')
+    print(f'fill_list= {fill_list}')
+    print(f'segment= {segments}')
+    print(f'max_segment= {max_segment}')
+    print(f'max_segments= {max_segments}')
+    # 3 make new dwall list
+    # if diff=1, simple rnd choice
+    if difficulty == 1:
+        print('-diff 1-')
+        x = choice(fill_list)
+        print(f'choice= {x}')
+        fill_list.remove(x)
+    else:
+        print('-diff > 1-')
+        if len(max_segments) > 1:
+            segment = choice(max_segments)
+        else:
+            segment = max_segment
+        print(f'segment= {segment}')
+        if segment[0] == difficulty:
+            print('-seg = diff-')
+            first_index = segment[1]
+            last_index = first_index + segment[0]
+            for i in range(first_index, last_index):
+                fill_list.remove(i)
+        elif segment[0] > difficulty:
+            print('-seg > dif-')
+            k = segment[0] - difficulty
+            first_index = segment[1]
+            last_index = segment[1] + k
+            choice_index = rnd(first_index, last_index+1, 1)
+            last_index = choice_index + difficulty
+            print(f'choice_index= {choice_index}')
+            print(f'last_index= {last_index}')
+            for i in range(choice_index, last_index):
+                fill_list.remove(i)
+        else:
+            print('-seg < dif-')
+            k = difficulty - segment[0]
+            print(f'k= {k}')
+            first_index = segment[1]
+            print(f'first_index= {first_index}')
+            last_index = first_index + segment[0]
+            print(f'last_index= {last_index}')
+            while k:
+                if last_index + 1 > 11:
+                    print('last index > 11')
+                    first_index -= k
+                    break
+                else:
+                    print('last index < 11')
+                    last_index += 1
+                    k -= 1
+                if first_index - 1 < 1:
+                    print('first_index < 1')
+                    last_index += k
+                    break
+                else:
+                    print('first_index > 1')
+                    first_index -= 1
+                    k -= 1
+            print(f'first_index= {first_index}')
+            print(f'last_index= {last_index}')
+            for i in range(first_index, last_index):
+                if i in fill_list:
+                    fill_list.remove(i)
+                else:
+                    zero_list.append(i)
+    # fill other places with blocks
+    for i in fill_list:
+        new_dwall_list[i] = i
+    if zero_list:
+        for i in zero_list:
+            new_dwall_list[i] = 0
+    print(f'new_dwall_list= {new_dwall_list}')
+    print('==================================================')
+    return new_dwall_list
+
+
+def generate_new_dwall_alternate_two(dwall_list_previous, difficulty):
+    print('=alternate dwall generator TWO=')
+    print(f'difficulty= {difficulty}')
+    # 1 mark vacant places in previous dwall
+    new_dwall_list = [0]*11
+    fill_list = []
+    zero_list = []
+    segments = []
+    k = 0
+    max_segment = [0, 0]
+    max_segments = []
+    for i in range(1, len(dwall_list_previous)):
+        if not dwall_list_previous[i]:
+            new_dwall_list[i] = i
+            if k > 0:
+                if k > max_segment[0]:
+                    max_segment[0] = k
+                    max_segment[1] = i-k
+                    max_segments = []
+                    max_segments.append((k, i-k))
+                elif k == max_segment[0]:
+                    max_segments.append((k, i-k))
+                segments.append((k, i-k))
+                k = 0
+        else:
+            k += 1
+            new_dwall_list[i] = 0
+            fill_list.append(i)
+    if k > 0:
+        if k > max_segment[0]:
+            max_segment[0] = k
+            max_segment[1] = i-k+1
+        elif k == max_segment[0]:
+            max_segments.append((k, i-k+1))
+        segments.append((k, i-k+1))
+        k = 0
+    print(f'prev_dwall_list= {dwall_list_previous}')
+    print(f'new_dwall_list= {new_dwall_list}')
+    print(f'fill_list= {fill_list}')
+    print(f'segment= {segments}')
+    print(f'max_segment= {max_segment}')
+    print(f'max_segments= {max_segments}')
+    # 3 make new dwall list
+    # if diff=1, simple rnd choice
+    if difficulty == 1:
+        print('-diff 1-')
+        x = choice(fill_list)
+        print(f'choice= {x}')
+        fill_list.remove(x)
+    elif difficulty == 2:
+        print('-diff 2-')
+        x = choice(fill_list)
+        print(f'choice= {x}')
+        fill_list.remove(x)
+        up_list = []
+        if x-1 in fill_list:
+            fill_list.remove(x-1)
+            up_list.append(x-1)
+        if x+1 in fill_list:
+            fill_list.remove(x+1)
+            up_list.append(x+1)
+        x = choice(fill_list)
+        print(f'choice= {x}')
+        fill_list.remove(x)
+        if up_list:
+            for i in up_list:
+                fill_list.append(i)
+    else:
+        up_list = []
+        print('-diff > 2-')
+        difficulty -= 1
+        if len(max_segments) > 1:
+            segment = choice(max_segments)
+        else:
+            segment = max_segment
+        print(f'segment= {segment}')
+        if segment[0] == difficulty:
+            print('-seg = diff-')
+            first_index = segment[1]
+            last_index = first_index + segment[0]
+            for i in range(first_index, last_index):
+                fill_list.remove(i)
+            if first_index-1 in fill_list:
+                fill_list.remove(first_index-1)
+                up_list.append(first_index-1)
+            if last_index in fill_list:
+                fill_list.remove(last_index)
+                up_list.append(last_index)
+            print(f'fill_list= {fill_list}')
+            print(f'up_list= {up_list}')
+        elif segment[0] > difficulty:
+            print('-seg > dif-')
+            k = segment[0] - difficulty
+            first_index = segment[1]
+            last_index = segment[1] + k
+            choice_index = rnd(first_index, last_index+1, 1)
+            last_index = choice_index + difficulty
+            print(f'choice_index= {choice_index}')
+            print(f'last_index= {last_index}')
+            for i in range(choice_index, last_index):
+                fill_list.remove(i)
+            if choice_index-1 in fill_list:
+                fill_list.remove(choice_index-1)
+                up_list.append(choice_index-1)
+            if last_index in fill_list:
+                fill_list.remove(last_index)
+                up_list.append(last_index)
+            print(f'fill_list= {fill_list}')
+            print(f'up_list= {up_list}')
+        else:
+            print('-seg < dif-')
+            k = difficulty - segment[0]
+            print(f'k= {k}')
+            first_index = segment[1]
+            print(f'first_index= {first_index}')
+            last_index = first_index + segment[0]
+            print(f'last_index= {last_index}')
+            while k:
+                if last_index + 1 > 11:
+                    print('last index > 11')
+                    first_index -= k
+                    break
+                else:
+                    print('last index < 11')
+                    last_index += 1
+                    k -= 1
+                if first_index - 1 < 1:
+                    print('first_index < 1')
+                    last_index += k
+                    break
+                else:
+                    print('first_index > 1')
+                    first_index -= 1
+                    k -= 1
+            print(f'first_index= {first_index}')
+            print(f'last_index= {last_index}')
+            for i in range(first_index, last_index):
+                if i in fill_list:
+                    fill_list.remove(i)
+                else:
+                    zero_list.append(i)
+        #
+        print(f'fill_list= {fill_list}')
+        # last block
+        print('-last block-')
+        if fill_list:
+            x = choice(fill_list)
+            print(f'choice= {x}')
+            fill_list.remove(x)
+        else:
+            new_list = []
+            for i in new_dwall_list:
+                if i:
+                    new_list.append(i)
+            x = choice(new_list)
+            new_dwall_list[x] = 0
+        if up_list:
+            for i in up_list:
+                fill_list.append(i)
+    # fill other places with blocks
+    for i in fill_list:
+        new_dwall_list[i] = i
+    if zero_list:
+        for i in zero_list:
+            new_dwall_list[i] = 0
+    print(f'new_dwall_list= {new_dwall_list}')
+    print('==================================================')
+    return new_dwall_list
+
+
+class DwallBlockSprite(pygame.sprite.Sprite):
+    def __init__(self, dwall, x, y, group, player):
+        pygame.sprite.Sprite.__init__(self)
+        self.add(group)
+        self.player = player
+        self.dwall = dwall
+        # dblock params
         self.dblock_w = settings.dblock_w
         self.dblock_h = settings.dblock_h
         self.dblock_color = settings.dblock_color
-        self.dwall_speed = settings.dwall_speed
-        # dwall utils
-        self.dwall = []
-        self.dwall_list_previous = [0, 0, 2, 0, 4, 0, 6, 0, 8, 0, 10]
-        self.difficulty = settings.difficulty
-        self.dwall_amount = settings.dwall_amount
+        # dblock construct
+        self.image = pygame.Surface((self.dblock_w, self.dblock_h))
+        self.image.fill(self.dblock_color)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
 
-    def draw(self):
-        # drawing death wall
-        [pygame.draw.rect(self.app.screen, self.dblock_color, dblock)
-         for dblock in self.dwall]
+    def check_player_collision(self):
+        if self.rect.colliderect(self.player.rect):
+            variables.dead = True
+            for dblock in self.dwall:
+                dblock.kill()
+
+    def update(self):
+        # dwall moving
+        self.rect.move_ip(0, variables.dwall_speed)
+        # check collision with player
+        self.check_player_collision()
+        # dwall check end of runway
+        if self.rect.top > settings.HEIGHT:
+            self.kill()
+            variables.passed = True
+
+
+class DwallGroup(pygame.sprite.Group):
+    def __init__(self, app):
+        super().__init__()
+        self.app = app
+
+    def check_passing_or_dead(self):
+        if variables.passed:
+            variables.passed = False
+            variables.dwall_amount -= 1
+            self.app.player.score += 1
+            # LOGS
+            print(f'points: {self.app.player.score}')
+            dwall_log.info(
+                {
+                    'time': str(dt.now()),
+                    'message': 'update_score',
+                    'score': self.app.player.score
+                }
+            )
+        elif variables.dead:
+            variables.dead = False
+            self.app.player.rect.topleft = (
+                settings.WIDTH // 2 - self.app.player.square_w // 2,
+                settings.HEIGHT - self.app.player.square_h - 10
+            )
+            if self.app.player.health > 1:
+                variables.dwall_amount -= 1
+                self.app.player.health -= 1
+                # LOGS
+                print(f'Death. Remains {self.app.player.health} attempts')
+                if variables.accelerate:
+                    dw_speed = variables.dwall_speed / 2
+                else:
+                    dw_speed = variables.dwall_speed
+                dwall_log.info(
+                    {
+                        'time': str(dt.now()),
+                        'message': 'death',
+                        'health': self.app.player.health,
+                        'player_pos': self.app.player.rect.x,
+                        'max_dwall_speed': dw_speed,
+                        'difficulty': variables.dwall_difficulty
+                    }
+                )
+            else:
+                self.app.player.health -= 1
+                variables.score = self.app.player.score
+                # LOGS
+                print('Game over')
+                if variables.accelerate:
+                    dw_speed = variables.dwall_speed / 2
+                else:
+                    dw_speed = variables.dwall_speed
+                dwall_log.info(
+                    {
+                        'time': str(dt.now()),
+                        'message': 'game_over',
+                        'score': variables.score,
+                        'player_pos': self.app.player.rect.x,
+                        'max_dwall_speed': dw_speed,
+                        'difficulty': variables.dwall_difficulty
+                    }
+                )
+                self.change_state()
+
+    def CheckEmpty(self):
+        sprites = self.sprites()
+        if not sprites:
+            if variables.dwall_amount > 0:
+                # dwall_list = generate_new_dwall(variables.dwall_list_previous,
+                #                                 variables.dwall_difficulty)
+                dwall_list = generate_new_dwall_alternate(
+                    variables.dwall_list_previous,
+                    variables.dwall_difficulty)
+                # dwall_list = generate_new_dwall_alternate_two(
+                #     variables.dwall_list_previous,
+                #     variables.dwall_difficulty)
+                variables.dwall_list_previous = dwall_list
+                variables.dwall_changed = False
+                for j in dwall_list:
+                    self.add(DwallBlockSprite(self,
+                                              70 * j-35,
+                                              -35,
+                                              self.app.all_sprites,
+                                              self.app.player))
+            else:
+                variables.score = self.app.player.score
+                self.change_state()
 
     def check_difficulty(self):
-        variables.dwall_amount = self.dwall_amount
-        self.dwall_speed = variables.dwall_speed
-        self.difficulty = variables.dwall_difficulty
-        if self.dwall_amount != 0 and not variables.dwall_changed:
+        if variables.dwall_amount != 0 and not variables.dwall_changed:
             if variables.SESSION_STAGE == 'START_TRAIN':
-                if (self.dwall_amount != settings.dwall_amount and
-                        self.dwall_amount % settings.dw_am_sp == 0):
+                if (variables.dwall_amount != settings.dwall_amount and
+                        variables.dwall_amount % settings.dw_am_sp == 0):
                     pygame.event.post(
                         pygame.event.Event(settings.DWALL_DIFF))
             elif variables.SESSION_STAGE == 'START_EXAM':
-                if (self.dwall_amount != settings.exam_dwall_amount and
-                        self.dwall_amount % settings.ex_dw_am_sp == 0):
+                if (variables.dwall_amount != settings.exam_dwall_amount and
+                        variables.dwall_amount % settings.ex_dw_am_sp == 0):
                     pygame.event.post(
                         pygame.event.Event(settings.DWALL_DIFF))
 
@@ -200,107 +580,18 @@ class Dwall:
             variables.SESSION_STAGE = 'PRE_EXAM'
             pygame.event.post(
                 pygame.event.Event(settings.PRE_EXAM))
-            self.dwall_amount = settings.exam_dwall_amount
-            self.difficulty = settings.exam_difficulty
-            self.player.health = settings.exam_health
-            self.player.score = settings.exam_score
+            variables.dwall_amount = settings.exam_dwall_amount
+            variables.dwall_difficulty = settings.exam_difficulty
+            self.app.player.health = settings.exam_health
+            self.app.player.score = settings.exam_score
         elif variables.SESSION_STAGE == 'START_EXAM':
             variables.SESSION_STAGE = 'STOP_STAGE'
             pygame.event.post(
                 pygame.event.Event(settings.STOP_STAGE))
             variables.SESSION_STAGE = 'RESULT'
 
-    def update(self, delta_t):
-        # check difficulty
+    def update(self):
         self.check_difficulty()
-        # creating death wall
-        if self.dwall_amount > 0:
-            if len(self.dwall) == 0:
-                self.dwall, self.dwall_list_previous = generate_new_dwall(
-                    self.dblock_w,
-                    self.dblock_h,
-                    self.dwall_list_previous,
-                    self.difficulty)
-                variables.dwall_changed = False
-        else:
-            variables.score = self.player.score
-            self.player.square.left = (self.app.res[0] // 2
-                                       - self.player.square_w // 2)
-            self.change_state()
-
-        # drawing checkline
-        line = pygame.draw.line(self.app.screen,
-                                (255, 255, 255),
-                                [0, self.app.res[1]],
-                                [self.app.res[0], self.app.res[1]],
-                                3)
-
-        # death wall moving and checks
-        for dblock in self.dwall:
-            dblock.y += self.dwall_speed * delta_t
-            # collision with line
-            collision_with_line = line.collidelistall(self.dwall)
-            if len(collision_with_line) > 0:
-                self.dwall = []
-                self.dwall_amount -= 1
-                self.player.score += 1
-                # LOGS
-                print(f'points: {self.player.score}')
-                dwall_log.info(
-                    {
-                        'time': str(dt.now()),
-                        'message': 'update_score',
-                        'score': self.player.score
-                    }
-                )
-                break
-            # collision with player
-            collisions = self.player.square.collidelistall(self.dwall)
-            if len(collisions) > 0:
-                if self.player.health > 1:
-                    self.dwall_amount -= 1
-                    self.player.health -= 1
-                    # LOGS
-                    print(f'Death. Remains {self.player.health} attempts')
-                    if variables.accelerate:
-                        dw_speed = variables.dwall_speed / 2
-                    else:
-                        dw_speed = variables.dwall_speed
-                    dwall_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'death',
-                            'health': self.player.health,
-                            'player_pos': self.player.square.x,
-                            'max_dwall_speed': dw_speed,
-                            'difficulty': variables.dwall_difficulty
-                        }
-                    )
-                    self.dwall = []
-                    self.player.square.left = (self.app.res[0] // 2
-                                               - self.player.square_w // 2)
-                    break
-                else:
-                    self.player.health -= 1
-                    self.dwall = []
-                    self.player.square.left = (self.app.res[0] // 2
-                                               - self.player.square_w // 2)
-                    variables.score = self.player.score
-                    # LOGS
-                    print('Game over')
-                    if variables.accelerate:
-                        dw_speed = variables.dwall_speed / 2
-                    else:
-                        dw_speed = variables.dwall_speed
-                    dwall_log.info(
-                        {
-                            'time': str(dt.now()),
-                            'message': 'game_over',
-                            'score': variables.score,
-                            'player_pos': self.player.square.x,
-                            'max_dwall_speed': dw_speed,
-                            'difficulty': variables.dwall_difficulty
-                        }
-                    )
-                    self.change_state()
-                    break
+        self.CheckEmpty()
+        super().update()
+        self.check_passing_or_dead()

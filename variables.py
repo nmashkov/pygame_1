@@ -18,12 +18,16 @@ dwall_speed = settings.dwall_speed
 acc_dwall_speed = dwall_speed * 2
 dwall_difficulty = settings.difficulty
 dwall_changed = False
+dwall_list_previous = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 is_warmuped = False
 debug_activated = False
 
 start_stage_time = dt.now()
 stage_time = td()
+
+dead = False
+passed = False
 
 lp_active_time = td()
 lp_left_time = dt.now()
