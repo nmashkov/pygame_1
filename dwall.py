@@ -12,8 +12,8 @@ log_file = 'dwall.json'
 dwall_log = setup_logger('dwall_logger', log_file)
 
 
-def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
-    # 1
+def generate_new_dwall(dblock_w, dblock_h, dwall_list_previous, difficulty):
+    # 1 mark vacant places in previous dwall
     new_dwall_list = [0]*11
     zero_list = []
     for i in range(1, len(dwall_list_previous)):
@@ -22,12 +22,12 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
         else:
             new_dwall_list[i] = 0
             zero_list.append(i)
-    # 2
+    # 2 take min and max amount of zero places
     max_counter = DIFF[difficulty][1]
     min_counter = DIFF[difficulty][0]
-    # 3
+    # 3 define amount of zero places
     counter = rnd(min_counter, max_counter+1, 1)
-    # 4
+    # 4 define number of twins
     if difficulty in (3, 4, 5):
         twin = 1
     else:
@@ -35,7 +35,7 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
             twin = choice([0, 1])
         else:
             twin = 0
-    # 5
+    # 5 make new dwall list
     vacant = len(zero_list)
     if vacant >= counter:
         y_input = True
@@ -55,7 +55,7 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
                 if x + 1 >= 11:
                     y = x - 1
                 else:
-                    y = x + 1
+                    y = choice(x+1, x-1)
                 y_input = False
                 zero_list.remove(x)
                 counter -= 2
@@ -69,28 +69,33 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
                 x = choice(zero_list)
                 zero_list.remove(x)
                 counter -= 1
+        # fill new dwall list with zero places
         for i in zero_list:
             new_dwall_list[i] = i
             if not y_input:
                 new_dwall_list[y] = 0
                 y_input = True
-    elif vacant < counter:
+    else:
         y_input = True
         if vacant == 1:
             if twin:
-                x = choice(zero_list)
+                x = zero_list[0]
                 if x + 1 >= 11:
                     y = x - 1
                 else:
-                    y = x + 1
+                    y = choice(x+1, x-1)
+                zero_list.pop()
                 y_input = False
-                zero_list.remove(x)
                 counter -= 2
             else:
+                zero_x = zero_list[0]
+                counter -= 1
                 while counter:
                     x = choice(new_dwall_list)
-                    zero_list.remove(x)
-                    counter -= 1
+                    if x not in (0, zero_x, zero_x+1, zero_x-1):
+                        new_dwall_list[x] = 0
+                        counter -= 1
+                zero_list.pop()
         else:
             if counter > 1 and twin:
                 pairs = []
@@ -122,8 +127,13 @@ def dwall_new(dblock_w, dblock_h, dwall_list_previous, difficulty):
                     x = choice(new_dwall_list)
                     zero_list.remove(x)
                     counter -= 1
-        for i in zero_list:
-            new_dwall_list[i] = i
+        if zero_list:
+            for i in zero_list:
+                new_dwall_list[i] = i
+                if not y_input:
+                    new_dwall_list[y] = 0
+                    y_input = True
+        else:
             if not y_input:
                 new_dwall_list[y] = 0
                 y_input = True
@@ -206,7 +216,7 @@ class Dwall:
         # creating death wall
         if self.dwall_amount > 0:
             if len(self.dwall) == 0:
-                self.dwall, self.dwall_list_previous = dwall_new(
+                self.dwall, self.dwall_list_previous = generate_new_dwall(
                     self.dblock_w,
                     self.dblock_h,
                     self.dwall_list_previous,
