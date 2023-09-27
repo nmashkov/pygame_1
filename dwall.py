@@ -13,6 +13,7 @@ dwall_log = setup_logger('dwall_logger', log_file)
 
 
 def generate_new_dwall(dwall_list_previous, difficulty):
+    print('=the first dwall generator=')
     # 1 mark vacant places in previous dwall
     new_dwall_list = [0]*11
     zero_list = []
@@ -139,7 +140,8 @@ def generate_new_dwall(dwall_list_previous, difficulty):
                 y_input = True
 
     # LOGS
-    print(new_dwall_list)
+    print(f'new_dwall_list= {new_dwall_list}')
+    print('==================================================')
     dwall_log.info(
             {
                 'time': str(dt.now()),
@@ -151,8 +153,7 @@ def generate_new_dwall(dwall_list_previous, difficulty):
 
 
 def generate_new_dwall_alternate(dwall_list_previous, difficulty):
-    print('=alternate dwall generator=')
-    print(f'difficulty= {difficulty}')
+    print('=the alternate dwall generator=')
     # 1 mark vacant places in previous dwall
     new_dwall_list = [0]*11
     fill_list = []
@@ -186,139 +187,13 @@ def generate_new_dwall_alternate(dwall_list_previous, difficulty):
             max_segments.append((k, i-k+1))
         segments.append((k, i-k+1))
         k = 0
-    print(f'prev_dwall_list= {dwall_list_previous}')
-    print(f'new_dwall_list= {new_dwall_list}')
-    print(f'fill_list= {fill_list}')
-    print(f'segment= {segments}')
-    print(f'max_segment= {max_segment}')
-    print(f'max_segments= {max_segments}')
     # 3 make new dwall list
     # if diff=1, simple rnd choice
     if difficulty == 1:
-        print('-diff 1-')
         x = choice(fill_list)
-        print(f'choice= {x}')
-        fill_list.remove(x)
-    else:
-        print('-diff > 1-')
-        if len(max_segments) > 1:
-            segment = choice(max_segments)
-        else:
-            segment = max_segment
-        print(f'segment= {segment}')
-        if segment[0] == difficulty:
-            print('-seg = diff-')
-            first_index = segment[1]
-            last_index = first_index + segment[0]
-            for i in range(first_index, last_index):
-                fill_list.remove(i)
-        elif segment[0] > difficulty:
-            print('-seg > dif-')
-            k = segment[0] - difficulty
-            first_index = segment[1]
-            last_index = segment[1] + k
-            choice_index = rnd(first_index, last_index+1, 1)
-            last_index = choice_index + difficulty
-            print(f'choice_index= {choice_index}')
-            print(f'last_index= {last_index}')
-            for i in range(choice_index, last_index):
-                fill_list.remove(i)
-        else:
-            print('-seg < dif-')
-            k = difficulty - segment[0]
-            print(f'k= {k}')
-            first_index = segment[1]
-            print(f'first_index= {first_index}')
-            last_index = first_index + segment[0]
-            print(f'last_index= {last_index}')
-            while k:
-                if last_index + 1 > 11:
-                    print('last index > 11')
-                    first_index -= k
-                    break
-                else:
-                    print('last index < 11')
-                    last_index += 1
-                    k -= 1
-                if first_index - 1 < 1:
-                    print('first_index < 1')
-                    last_index += k
-                    break
-                else:
-                    print('first_index > 1')
-                    first_index -= 1
-                    k -= 1
-            print(f'first_index= {first_index}')
-            print(f'last_index= {last_index}')
-            for i in range(first_index, last_index):
-                if i in fill_list:
-                    fill_list.remove(i)
-                else:
-                    zero_list.append(i)
-    # fill other places with blocks
-    for i in fill_list:
-        new_dwall_list[i] = i
-    if zero_list:
-        for i in zero_list:
-            new_dwall_list[i] = 0
-    print(f'new_dwall_list= {new_dwall_list}')
-    print('==================================================')
-    return new_dwall_list
-
-
-def generate_new_dwall_alternate_two(dwall_list_previous, difficulty):
-    print('=alternate dwall generator TWO=')
-    print(f'difficulty= {difficulty}')
-    # 1 mark vacant places in previous dwall
-    new_dwall_list = [0]*11
-    fill_list = []
-    zero_list = []
-    segments = []
-    k = 0
-    max_segment = [0, 0]
-    max_segments = []
-    for i in range(1, len(dwall_list_previous)):
-        if not dwall_list_previous[i]:
-            new_dwall_list[i] = i
-            if k > 0:
-                if k > max_segment[0]:
-                    max_segment[0] = k
-                    max_segment[1] = i-k
-                    max_segments = []
-                    max_segments.append((k, i-k))
-                elif k == max_segment[0]:
-                    max_segments.append((k, i-k))
-                segments.append((k, i-k))
-                k = 0
-        else:
-            k += 1
-            new_dwall_list[i] = 0
-            fill_list.append(i)
-    if k > 0:
-        if k > max_segment[0]:
-            max_segment[0] = k
-            max_segment[1] = i-k+1
-        elif k == max_segment[0]:
-            max_segments.append((k, i-k+1))
-        segments.append((k, i-k+1))
-        k = 0
-    print(f'prev_dwall_list= {dwall_list_previous}')
-    print(f'new_dwall_list= {new_dwall_list}')
-    print(f'fill_list= {fill_list}')
-    print(f'segment= {segments}')
-    print(f'max_segment= {max_segment}')
-    print(f'max_segments= {max_segments}')
-    # 3 make new dwall list
-    # if diff=1, simple rnd choice
-    if difficulty == 1:
-        print('-diff 1-')
-        x = choice(fill_list)
-        print(f'choice= {x}')
         fill_list.remove(x)
     elif difficulty == 2:
-        print('-diff 2-')
         x = choice(fill_list)
-        print(f'choice= {x}')
         fill_list.remove(x)
         up_list = []
         if x-1 in fill_list:
@@ -328,22 +203,18 @@ def generate_new_dwall_alternate_two(dwall_list_previous, difficulty):
             fill_list.remove(x+1)
             up_list.append(x+1)
         x = choice(fill_list)
-        print(f'choice= {x}')
         fill_list.remove(x)
         if up_list:
             for i in up_list:
                 fill_list.append(i)
     else:
         up_list = []
-        print('-diff > 2-')
         difficulty -= 1
         if len(max_segments) > 1:
             segment = choice(max_segments)
         else:
             segment = max_segment
-        print(f'segment= {segment}')
         if segment[0] == difficulty:
-            print('-seg = diff-')
             first_index = segment[1]
             last_index = first_index + segment[0]
             for i in range(first_index, last_index):
@@ -354,17 +225,12 @@ def generate_new_dwall_alternate_two(dwall_list_previous, difficulty):
             if last_index in fill_list:
                 fill_list.remove(last_index)
                 up_list.append(last_index)
-            print(f'fill_list= {fill_list}')
-            print(f'up_list= {up_list}')
         elif segment[0] > difficulty:
-            print('-seg > dif-')
             k = segment[0] - difficulty
             first_index = segment[1]
             last_index = segment[1] + k
             choice_index = rnd(first_index, last_index+1, 1)
             last_index = choice_index + difficulty
-            print(f'choice_index= {choice_index}')
-            print(f'last_index= {last_index}')
             for i in range(choice_index, last_index):
                 fill_list.remove(i)
             if choice_index-1 in fill_list:
@@ -373,47 +239,31 @@ def generate_new_dwall_alternate_two(dwall_list_previous, difficulty):
             if last_index in fill_list:
                 fill_list.remove(last_index)
                 up_list.append(last_index)
-            print(f'fill_list= {fill_list}')
-            print(f'up_list= {up_list}')
         else:
-            print('-seg < dif-')
             k = difficulty - segment[0]
-            print(f'k= {k}')
             first_index = segment[1]
-            print(f'first_index= {first_index}')
             last_index = first_index + segment[0]
-            print(f'last_index= {last_index}')
             while k:
                 if last_index + 1 > 11:
-                    print('last index > 11')
                     first_index -= k
                     break
                 else:
-                    print('last index < 11')
                     last_index += 1
                     k -= 1
                 if first_index - 1 < 1:
-                    print('first_index < 1')
                     last_index += k
                     break
                 else:
-                    print('first_index > 1')
                     first_index -= 1
                     k -= 1
-            print(f'first_index= {first_index}')
-            print(f'last_index= {last_index}')
             for i in range(first_index, last_index):
                 if i in fill_list:
                     fill_list.remove(i)
                 else:
                     zero_list.append(i)
-        #
-        print(f'fill_list= {fill_list}')
         # last block
-        print('-last block-')
         if fill_list:
             x = choice(fill_list)
-            print(f'choice= {x}')
             fill_list.remove(x)
         else:
             new_list = []
@@ -538,15 +388,12 @@ class DwallGroup(pygame.sprite.Group):
         sprites = self.sprites()
         if not sprites:
             if variables.dwall_amount > 0:
-                # dwall_list = generate_new_dwall(variables.dwall_list_previous,
-                #                                 variables.dwall_difficulty)
-                dwall_list = generate_new_dwall_alternate(
-                    variables.dwall_list_previous,
-                    variables.dwall_difficulty)
-                # dwall_list = generate_new_dwall_alternate_two(
+                dwall_list = generate_new_dwall(variables.dwall_list_previous,
+                                                variables.dwall_difficulty)
+                # dwall_list = generate_new_dwall_alternate(
                 #     variables.dwall_list_previous,
                 #     variables.dwall_difficulty)
-                variables.dwall_list_previous = dwall_list
+                # variables.dwall_list_previous = dwall_list
                 variables.dwall_changed = False
                 for j in dwall_list:
                     self.add(DwallBlockSprite(self,
@@ -556,6 +403,10 @@ class DwallGroup(pygame.sprite.Group):
                                               self.app.player))
             else:
                 variables.score = self.app.player.score
+                self.app.player.rect.topleft = (
+                    settings.WIDTH // 2 - self.app.player.square_w // 2,
+                    settings.HEIGHT - self.app.player.square_h - 10
+                )
                 self.change_state()
 
     def check_difficulty(self):

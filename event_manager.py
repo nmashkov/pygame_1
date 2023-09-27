@@ -732,7 +732,7 @@ def event_handler():
             sys.exit()
         # ACTIVATE DEBUG PANEL AND EXIT
         if events.type == pygame.KEYDOWN:
-            if events.mod == pygame.KMOD_LALT:
+            if pygame.key.get_mods() & pygame.KMOD_LALT:
                 if events.key == settings.DEBUG:
                     if not variables.debug_activated:
                         variables.debug_activated = True
