@@ -6,6 +6,7 @@ build.bat
 /output
 /output32
 /venv32
+/venv-new
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -95,7 +95,7 @@ def print_results(stage):
             f"{variables.stage_time};"
             f"{player_p};"
             f"{player_kp};"
-            f"{player_ap}"
+            f"{player_ap};"
             f"{variables.cooperative_time};"
             f"{variables.conflict_time};"
             f"{variables.accelerate_time};"
