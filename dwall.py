@@ -281,8 +281,17 @@ def generate_new_dwall_alternate(dwall_list_previous, difficulty):
     if zero_list:
         for i in zero_list:
             new_dwall_list[i] = 0
+    # LOGS
     print(f'new_dwall_list= {new_dwall_list}')
     print('==================================================')
+    dwall_log.info(
+            {
+                'time': str(dt.now()),
+                'message': 'create_new_dwall',
+                'dwall_list': new_dwall_list
+            }
+        )
+    #
     return new_dwall_list
 
 
@@ -388,12 +397,12 @@ class DwallGroup(pygame.sprite.Group):
         sprites = self.sprites()
         if not sprites:
             if variables.dwall_amount > 0:
-                dwall_list = generate_new_dwall(variables.dwall_list_previous,
-                                                variables.dwall_difficulty)
-                # dwall_list = generate_new_dwall_alternate(
-                #     variables.dwall_list_previous,
-                #     variables.dwall_difficulty)
-                # variables.dwall_list_previous = dwall_list
+                # dwall_list = generate_new_dwall(variables.dwall_list_previous,
+                #                                 variables.dwall_difficulty)
+                dwall_list = generate_new_dwall_alternate(
+                    variables.dwall_list_previous,
+                    variables.dwall_difficulty)
+                variables.dwall_list_previous = dwall_list
                 variables.dwall_changed = False
                 for j in dwall_list:
                     self.add(DwallBlockSprite(self,

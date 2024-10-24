@@ -64,7 +64,7 @@ def print_results(stage):
     elif stage == 'RESULT':
         stage_name = 'Результаты зачёта:'
         stage_name_2 = 'зачёта'
-    results_dict = [
+    results_list = [
         '',
         '---------------------------------------',
         f'{stage_name}',
@@ -80,8 +80,31 @@ def print_results(stage):
     results_file = 'results.txt'
     dir = (f'{settings.BASE_DIR}/{settings.BASE_LOGS_DIR}/'
            f'{settings.SESSION_DIR}/{results_file}')
-    with open(dir, 'a') as f:
-        f.write('\n'.join(results_dict))
+    with open(dir, 'a', encoding='utf-8') as f:
+        f.write('\n'.join(results_list))
+    #
+    if stage == 'RESULT':
+        results_str = (
+            f"\n{settings.SESSION_DIR[:8]};"
+            f"{variables.SESSION_START};"
+            f"{variables.SESSION_END};"
+            "ЛИ;"
+            "ПИ;"
+            f"{variables.score};"
+            "Количество очков_2;"
+            f"{variables.stage_time};"
+            f"{player_p};"
+            f"{player_kp};"
+            f"{player_ap}"
+            f"{variables.cooperative_time};"
+            f"{variables.conflict_time};"
+            f"{variables.accelerate_time};"
+        )                  
+        all_results_file = 'all_results.csv'
+        dir = (f'{settings.BASE_DIR}/{settings.BASE_LOGS_DIR}/'
+            f'{all_results_file}')
+        with open(dir, 'a', encoding='utf-8') as f:
+            f.write(results_str)
 
 
 def player_events(events):
@@ -489,6 +512,7 @@ def event_handler():
             )
         # RESULT
         if events.type == settings.RESULT:
+            variables.SESSION_END = dt.now()
             event_log.info(
                 {
                     'time': f'{dt.now()}',

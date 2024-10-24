@@ -4,6 +4,8 @@
 /fonts
 build.bat
 /output
+/output32
+/venv32
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
