@@ -1,6 +1,6 @@
 """
 Synergy-1
-Author: Nikita Mashkov
+Author: Nikita Mashkov, Alexey Malishevsky
 Programmer: Nikita Mashkov
 Designer: Evgeny Manuylenko
 Github: https://github.com/nmashkov

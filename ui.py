@@ -17,7 +17,7 @@ def ui_credits(screen):
                 (center - t.get_width()*.5, top))
     screen.blit(base2.render('Идея', True, dark_grey),
                 (left, top*4))
-    text = base2.render('Машков Н.А.', True, dark_grey)
+    text = base2.render('Машков Н.А., Малишевский А.В.', True, dark_grey)
     screen.blit(text,
                 (settings.WIDTH - left - text.get_width(), top*4))
     screen.blit(base2.render('Разработка', True, dark_grey),
